@@ -11,6 +11,7 @@ services:
       - web_variables.env
     environment:
       - FLASK_DEBUG
+      - POSTGRES_PASSWORD
     volumes:
       - ./app:/app
   pg:
