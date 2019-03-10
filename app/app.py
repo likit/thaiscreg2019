@@ -9,11 +9,10 @@ db = SQLAlchemy()
 login_manager = LoginManager()
 migrate = Migrate()
 
-SECRET_KEY = os.environ.get('SECRET_KEY') or str(uuid.uuid4())
-SQLALCHEMY_TRACK_MODIFICATIONS = False
-SQLALCHEMY_DATABASE_URI = 'postgres+psycopg2://postgres@pg/scregdb'
-
 app = Flask(__name__)
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY') or str(uuid.uuid4())
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres+psycopg2://postgres@pg/scregdb'
 
 db.init_app(app)
 login_manager.init_app(app)

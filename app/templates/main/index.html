@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block title %}Thai SCReg Main Page{% endblock %}
+{% block content %}
+    <section class="hero is-info is-fullheight">
+        <nav class="navbar" role="navigation" aria-label="main navigation">
+            <div class="navbar-brand">
+                <a role="button" class="navbar-burger burger" aria-label="menu"
+                   aria-expanded="false" data-target="navbarBasicExample">
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                </a>
+            </div>
+            <div id="navbarBasicExample" class="navbar-menu">
+                <div class="navbar-end">
+                    <a class="navbar-item">
+                        Register
+                    </a>
+                    <a class="navbar-item">
+                        Cells
+                    </a>
+                    <a class="navbar-item">
+                        Projects
+                    </a>
+                    <a class="navbar-item">
+                        Researchers
+                    </a>
+                    <a class="navbar-item">
+                        About
+                    </a>
+                </div>
+            </div>
+        </nav>
+        <div class="hero-body">
+            <div class="container">
+                <div class="columns">
+                    <div class="column">
+                        <h1 class="title">Thailand National Stem Cells Registry</h1>
+                        <h1 class="subtitle">Advancing Thailand Stem Cell Research</h1>
+                    </div>
+                    <div class="column is-one-third">
+                        <div class="card">
+                            <div class="card-header">
+                                <p class="card-header-title is-centered">
+                                    Sign Up For A New Account
+                                </p>
+                            </div>
+                            <div class="card-content">
+                                <form method="post">
+                                    {{ form.hidden_tag() }}
+                                    <div class="field">
+                                        <div class="control">
+                                            {{ form.email(placeholder='Email Address', class='input') }}
+                                        </div>
+                                        {% for error in error_msg['email'] %}
+                                            <div class="help is-danger">{{ error }}</div>
+                                        {% endfor %}
+                                    </div>
+                                    <div class="field">
+                                        <div class="control">
+                                            {{ form.password1(placeholder='Password', class='input') }}
+                                        </div>
+                                        {% for error in error_msg['password1'] %}
+                                            <div class="help is-danger">{{ error }}</div>
+                                        {% endfor %}
+                                    </div>
+                                    <div class="field">
+                                        <div class="control">
+                                            {{ form.password2(placeholder='Confirm Password', class='input') }}
+                                        </div>
+                                        {% for error in error_msg['password2'] %}
+                                            <div class="help is-danger">{{ error }}</div>
+                                        {% endfor %}
+                                    </div>
+                                    <div class="has-text-centered">
+                                        {{ form.submit(class='button is-primary') }}
+                                    </div>
+                                </form>
+                            </div>
+                            <footer class="card-footer">
+                                <a class="card-footer-item">Sign In</a>
+                                <a class="card-footer-item">Forgot password?</a>
+                            </footer>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
