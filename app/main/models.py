@@ -53,6 +53,12 @@ class ApprovalStatus(db.Model):
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
     status = db.Column('status', db.String(32))
 
+    def __str__(self):
+        return self.status
+
+    def __repr__(self):
+        return self.__str__()
+
 
 class Project(db.Model):
     __tablename__ = 'main_projects'
