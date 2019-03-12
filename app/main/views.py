@@ -95,3 +95,38 @@ def account_dash():
                            projects=projects,
                            affil_projects=affil_projects,
                            affil_researchers=affil_researchers)
+
+
+@main.route('/projects')
+def show_projects():
+    query = request.args.get('q', None)
+    projects = []
+    for proj in Project.query.all():
+        projects.append({
+            'id': proj.id,
+            'title': proj.title,
+            'affil': proj.institution.name_th,
+            'startdate': proj.startdate,
+            'enddate': proj.enddate,
+            'status': proj.status.status,
+            'creator': {
+                'email': proj.creator.email,
+                'firstname': proj.creator.profile.first_name_th,
+                'lastname': proj.creator.profile.last_name_th,
+                'affil': proj.creator.profile.affil.name_th,
+            },
+            'summary': proj.summary[:300]
+        })
+
+    print('Query', query)
+
+    if query:
+        filtered_projects = []
+        for p in projects:
+            if query.lower() in p['title'].lower() or query.lower() in p['summary'].lower():
+                filtered_projects.append(p)
+    else:
+        filtered_projects = projects
+    return render_template('main/projects.html',
+                           projects=filtered_projects)
+
