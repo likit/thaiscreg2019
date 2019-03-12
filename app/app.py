@@ -41,6 +41,11 @@ admin.add_views(ModelView(Institution, db.session, category='institutions'))
 def user_loader(user_id):
     return User.query.get(int(user_id))
 
+@app.template_filter('shortdate')
+def format_shortdate(value):
+    if value is None:
+        return ""
+    return value.strftime('%-d %b, %y')
 
 if __name__ == '__main__':
     app.run()
