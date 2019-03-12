@@ -57,17 +57,17 @@
             <nav class="tabs is-boxed is-fullwidth">
                 <div class="container">
                     <ul>
-                        <li class="is-active">
-                            <a>Overview</a>
+                        <li {% if page_name=='dashboard' %}class="is-active"{% endif %}>
+                            <a href="{{ url_for('main.account_dash') }}">Overview</a>
                         </li>
-                        <li>
+                        <li {% if page_name=='profile' %}class="is-active"{% endif %}>
                             <a>Profile</a>
                         </li>
-                        <li>
+                        <li {% if page_name=='cell' %}class="is-active"{% endif %}>
                             <a>Cells</a>
                         </li>
-                        <li>
-                            <a>Projects</a>
+                        <li {% if page_name=='project' %}class="is-active"{% endif %}>
+                            <a href="{{ url_for('main.account_projects') }}">Project</a>
                         </li>
                     </ul>
                 </div>

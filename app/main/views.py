@@ -70,7 +70,7 @@ def log_user_out():
         return redirect(url_for('main.log_user_in'))
 
 
-@main.route('/account/main')
+@main.route('/account/dashboard')
 @login_required
 def account_dash():
     projects = {'pending': 0, 'approved': 0, 'total': 0}
@@ -94,7 +94,34 @@ def account_dash():
     return render_template('main/account_dash.html',
                            projects=projects,
                            affil_projects=affil_projects,
-                           affil_researchers=affil_researchers)
+                           affil_researchers=affil_researchers,
+                           page_name='dashboard')
+
+
+@main.route('/account/projects')
+@login_required
+def account_projects():
+    projects = []
+    for proj in current_user.created_projects:
+        projects.append({
+            'id': proj.id,
+            'title': proj.title,
+            'affil': proj.institution.name_th,
+            'startdate': proj.startdate,
+            'enddate': proj.enddate,
+            'status': proj.status.status,
+            'creator': {
+                'email': proj.creator.email,
+                'firstname': proj.creator.profile.first_name_th,
+                'lastname': proj.creator.profile.last_name_th,
+                'affil': proj.creator.profile.affil.name_th,
+            },
+            'summary': proj.summary[:300]
+        })
+
+    return render_template('main/account_projects.html',
+                           projects=projects,
+                           page_name='project')
 
 
 @main.route('/projects')
@@ -117,8 +144,6 @@ def show_projects():
             },
             'summary': proj.summary[:300]
         })
-
-    print('Query', query)
 
     if query:
         filtered_projects = []
