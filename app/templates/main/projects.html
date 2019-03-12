@@ -32,13 +32,28 @@
                                 About
                             </a>
                             {% if current_user.is_authenticated %}
-                                <a class="navbar-item" href="{{ url_for('main.account_dash') }}">
-                                    Account
-                                </a>
+                                <div class="navbar-item" >
+                                    <div class="buttons">
+                                        <a class="button is-rounded is-link"
+                                           href="{{ url_for('main.account_dash') }}">
+                                            <span class="icon">
+                                                <i class="fas fa-user-circle"></i>
+                                            </span>&nbsp;
+                                            Account
+                                        </a>
+                                        <a class="button is-light is-rounded"
+                                           href="{{ url_for('main.log_user_out') }}">
+                                            <span class="icon">
+                                               <i class="fas fa-power-off"></i>
+                                            </span>
+                                        </a>
+                                    </div>
+                                </div>
+                            {% else %}
                                 <div class="navbar-item">
-                                    <a class="button is-light"
-                                       href="{{ url_for('main.log_user_out') }}">
-                                        Sign Out
+                                    <a class="button is-link is-rounded"
+                                       href="{{ url_for('main.log_user_in') }}">
+                                        Log In
                                     </a>
                                 </div>
                             {% endif %}
@@ -51,6 +66,7 @@
             <div class="container has-text-centered">
                 <div class="columns">
                     <div class="column">
+                        <img src="{{ url_for('static', filename='img/network.png') }}" width="200">
                         <h1 class="title">Project Explorer</h1>
                         <h1 class="subtitle">Total of {{ projects|length }} Projects</h1>
                     </div>
