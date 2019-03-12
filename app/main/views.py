@@ -13,7 +13,7 @@ def index():
     if form.validate_on_submit():
         user_ = User.query.filter_by(email=form.email.data).first()
         if user_:
-            return redirect('/')
+            return redirect(url_for('main.log_user_in', user_exist=form.email.data))
         else:
             new_user = User(email=form.email.data,
                             password=form.password1.data)
@@ -36,7 +36,12 @@ def index():
 @main.route('/login_form', methods=['GET', 'POST'])
 def log_user_in():
     error_msg = None
+    if current_user.is_authenticated:
+        return redirect(url_for('main.account_dash'))
     form = LogInForm()
+    if request.args.get('user_exist', False):
+        error_msg = 'Email account already exists. Please log in.'
+        form.email.data = request.args.get('user_exist')
     if form.validate_on_submit():
         email = request.form.get('email')
         user = User.query.filter_by(email=email).first()
