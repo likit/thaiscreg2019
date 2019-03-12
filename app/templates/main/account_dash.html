@@ -1,0 +1,51 @@
+{% extends "main/account_base.html" %}
+{% block account_content %}
+    <div class="container">
+        <div class="columns">
+            <div class="column">
+                <div class="box">
+                    <table class="table is-striped is-fullwidth">
+                        <thead>
+                            <th></th>
+                            <th>Total</th>
+                            <th>Pending</th>
+                            <th>Approved</th>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Registered Cell Lines</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                            </tr>
+                            <tr>
+                                <td>Your Projects</td>
+                                <td>{{ projects['total'] }}</td>
+                                <td>{{ projects['pending'] }}</td>
+                                <td>{{ projects['approved'] }}</td>
+                            </tr>
+                            <tr>
+                                <td>Researchers in Your Affiliation</td>
+                                <td>{{ affil_researchers|length }}</td>
+                                <td>-</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>Cell Lines from Your Affiliation</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                            </tr>
+                            <tr>
+                                <td>Projects from Your Affiliation</td>
+                                <td>{{ affil_projects['total'] }}</td>
+                                <td>{{ affil_projects['pending'] }}</td>
+                                <td>{{ affil_projects['approved'] }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
