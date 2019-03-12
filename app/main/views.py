@@ -2,7 +2,7 @@ from flask import render_template, redirect, request, url_for
 from . import mainbp as main
 from .forms import SignUpForm, LogInForm
 from collections import defaultdict
-from .models import User, Project
+from .models import User, Project, Event
 from ..app import db
 from flask_login import login_user, current_user, logout_user, login_required
 
@@ -27,10 +27,13 @@ def index():
                 error_msg[field].append(error)
 
     projects = Project.query.all()[:3]
+    events = Event.query.all()[:5]
 
     return render_template('main/index.html', form=form,
                            error_msg=error_msg,
-                           projects=projects*3)
+                           projects=projects,
+                           events=events,
+                           )
 
 
 @main.route('/login_form', methods=['GET', 'POST'])
