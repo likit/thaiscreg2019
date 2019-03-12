@@ -3,12 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--
     <link rel="stylesheet" href="{{ url_for('static', filename='css/bulmaswatch.min.css') }}">
+    -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.4/css/bulma.css" />
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+    <!-- <link rel="stylesheet" href="https://unpkg.com/buefy/dist/buefy.min.css"> -->
     <title>{% block title %}{% endblock %}</title>
 </head>
 <body>
 {% block content %}
+{% endblock %}
+<footer class="footer">
+    <div class="container">
+        <div class="columns">
+            <div class="column">
+                <h3 class="title is-size-4">About</h3>
+                <p>
+                    <a href="#">ThSCReg Project</a>
+                </p>
+                <p>
+                    <a href="#">TCELS</a>
+                </p>
+            </div>
+            <div class="column">
+                <h3 class="title is-size-4">Cell Lines</h3>
+                <p>
+                    <a href="#">Register Cell Line</a>
+                </p>
+                <p>
+                    <a href="#">All hESC cells</a>
+                </p>
+                <p>
+                    <a href="#">All hiPSC cells</a>
+                </p>
+            </div>
+            <div class="column">
+                <h3 class="title is-size-4">Account</h3>
+                <p>
+                    <a href="#">Log In</a>
+                </p>
+                <p>
+                    <a href="#">Sign Up</a>
+                </p>
+                <p>
+                    <a href="#">Forgot Password</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+{% block scripts %}
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <script src="https://unpkg.com/buefy/dist/buefy.min.js"></script>
 {% endblock %}
 </body>
 </html>

@@ -1,6 +1,6 @@
 from flask import render_template, redirect, request
 from . import mainbp as main
-from .forms import LoginForm
+from .forms import SignUpForm, LogInForm
 from collections import defaultdict
 from .models import User
 from ..app import db
@@ -9,7 +9,7 @@ from flask_login import login_user, current_user
 @main.route('/', methods=['GET', 'POST'])
 def index():
     error_msg = defaultdict(list)
-    form = LoginForm()
+    form = SignUpForm()
     if form.validate_on_submit():
         user_ = User.query.filter_by(email=form.email.data).first()
         if user_:
@@ -28,3 +28,23 @@ def index():
 
     return render_template('main/index.html', form=form, error_msg=error_msg)
 
+
+@main.route('/login_form', methods=['GET', 'POST'])
+def log_user_in():
+    error_msg = None
+    form = LogInForm()
+    if form.validate_on_submit():
+        email = request.form.get('email')
+        user = User.query.filter_by(email=email).first()
+        if user:
+            pw = request.form.get('password')
+            if pw == user.password:
+                login_user(user)
+                return redirect('/')
+            else:
+                error_msg = 'Password is not correct.'
+        else:
+            error_msg = 'Email does not exist.'
+
+    return render_template('main/login.html', form=form,
+                           error_msg=error_msg)
