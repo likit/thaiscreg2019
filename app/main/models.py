@@ -76,3 +76,17 @@ class Project(db.Model):
     creator = db.relationship('User', backref=db.backref('created_projects'))
     status_id = db.Column('status_id', db.ForeignKey('main_approval_statuses.id'))
     status = db.relationship('ApprovalStatus')
+
+
+class Event(db.Model):
+    __tablename__ = 'main_events'
+    id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
+    name = db.Column('name', db.String(255))
+    venue = db.Column('venue', db.String(255))
+    description = db.Column('description', db.Text())
+    max_participants = db.Column('max_participants', db.Integer())
+    start = db.Column('start', db.DateTime(timezone=True))
+    end = db.Column('end', db.DateTime(timezone=True))
+    creator_id = db.Column('creator_id', db.ForeignKey('main_users.id'))
+    creator = db.relationship('User', backref=db.backref('created_events'))
+    closed = db.Column('closed', db.Boolean(), default=False)
