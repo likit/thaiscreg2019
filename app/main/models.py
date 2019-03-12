@@ -71,6 +71,7 @@ class Project(db.Model):
     enddate = db.Column('enddate', db.Date())
     sponsor_name = db.Column('sponsor_name', db.String(255))
     inst_id = db.Column('inst_id', db.ForeignKey('main_institutions.id'))
+    institution = db.relationship('Institution')
     creator_id = db.Column('creator_id', db.ForeignKey('main_users.id'))
     creator = db.relationship('User', backref=db.backref('created_projects'))
     status_id = db.Column('status_id', db.ForeignKey('main_approval_statuses.id'))
