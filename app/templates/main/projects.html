@@ -79,6 +79,12 @@
             <div class="columns">
                 <div class="column">
                     <div class="box" id="app">
+                        {% if query %}
+                            <div class="tags has-addons">
+                                <span class="tag">Query</span>
+                                <span class="tag is-warning">{{ query }}</span>
+                            </div>
+                        {% endif %}
                         <b-table
                                 :data="data"
                                 ref="table"
@@ -107,6 +113,14 @@
                                 </b-table-column>
                                 <b-table-column field="status" label="Status" sortable>
                                     <% props.row.status %>
+                                </b-table-column>
+                                <b-table-column field="view" label="View">
+                                    <a @click="goto(props.row)" v-if="props.row.status==='approved'">
+                                        <span class="icon">
+                                            <i class="far fa-eye"></i>
+                                        </span>
+                                        <span class="tag">4</span>
+                                    </a>
                                 </b-table-column>
                             </template>
                             <template slot="detail" slot-scope="props">
@@ -157,6 +171,9 @@
                 toggle(row) {
                     this.$refs.table.toggleDetails(row)
                 },
+                goto(row) {
+                    window.open("/account/project/view/" + row.id)
+                }
             }
         });
     </script>

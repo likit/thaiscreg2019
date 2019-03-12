@@ -20,9 +20,21 @@
                             </tr>
                             <tr>
                                 <td>Your Projects</td>
-                                <td>{{ projects['total'] }}</td>
-                                <td>{{ projects['pending'] }}</td>
-                                <td>{{ projects['approved'] }}</td>
+                                <td>
+                                    <a href="{{ url_for('main.account_projects', status_filter='all') }}">
+                                        {{ projects['total'] }}
+                                    </a>
+                                </td>
+                                <td>
+                                    <a href="{{ url_for('main.account_projects', status_filter='pending') }}">
+                                        {{ projects['pending'] }}
+                                    </a>
+                                </td>
+                                <td>
+                                    <a href="{{ url_for('main.account_projects', status_filter='approved') }}">
+                                        {{ projects['approved'] }}
+                                    </a>
+                                </td>
                             </tr>
                             <tr>
                                 <td>Researchers in Your Affiliation</td>

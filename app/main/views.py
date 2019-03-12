@@ -101,6 +101,7 @@ def account_dash():
 @main.route('/account/projects')
 @login_required
 def account_projects():
+    status_filter = request.args.get('status_filter', None)
     projects = []
     for proj in current_user.created_projects:
         projects.append({
@@ -119,8 +120,15 @@ def account_projects():
             'summary': proj.summary[:300]
         })
 
+    if status_filter is None or status_filter == 'all':
+        filtered_projects = projects
+        status_filter = None
+    else:
+        filtered_projects = [p for p in projects if p['status'] == status_filter]
+
     return render_template('main/account_projects.html',
-                           projects=projects,
+                           projects=filtered_projects,
+                           status_filter=status_filter,
                            page_name='project')
 
 
@@ -153,5 +161,6 @@ def show_projects():
     else:
         filtered_projects = projects
     return render_template('main/projects.html',
+                           query=query,
                            projects=filtered_projects)
 
