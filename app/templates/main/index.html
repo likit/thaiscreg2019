@@ -4,54 +4,61 @@
     <section class="hero is-info is-bold is-medium">
         <div class="hero-head">
             <nav class="navbar">
-            <div class="container">
-                <div class="navbar-brand">
-                    <a role="button" class="navbar-burger burger" aria-label="menu"
-                       aria-expanded="false" data-target="navbarBasicExample">
-                        <span aria-hidden="true"></span>
-                        <span aria-hidden="true"></span>
-                        <span aria-hidden="true"></span>
-                    </a>
-                </div>
-                <div id="navbarBasicExample" class="navbar-menu">
-                    <div class="navbar-end">
-                        <a class="navbar-item is-active">
-                            Home
+                <div class="container">
+                    <div class="navbar-brand">
+                        <a role="button" class="navbar-burger burger" aria-label="menu"
+                           aria-expanded="false" data-target="navbarBasicExample">
+                            <span aria-hidden="true"></span>
+                            <span aria-hidden="true"></span>
+                            <span aria-hidden="true"></span>
                         </a>
-                        <a class="navbar-item">
-                            Cells
-                        </a>
-                        <a class="navbar-item">
-                            Projects
-                        </a>
-                        <a class="navbar-item">
-                            Researchers
-                        </a>
-                        <a class="navbar-item">
-                            About
-                        </a>
-                        {% if current_user.is_authenticated %}
-                        <a class="navbar-item" href="{{ url_for('main.account_dash') }}">
-                            Account
-                        </a>
-                        <div class="navbar-item">
-                            <a class="button is-light"
-                                href="{{ url_for('main.log_user_out') }}">
-                                Sign Out
+                    </div>
+                    <div id="navbarBasicExample" class="navbar-menu">
+                        <div class="navbar-end">
+                            <a class="navbar-item is-active">
+                                Home
                             </a>
+                            <a class="navbar-item">
+                                Cells
+                            </a>
+                            <a class="navbar-item">
+                                Projects
+                            </a>
+                            <a class="navbar-item">
+                                Researchers
+                            </a>
+                            <a class="navbar-item">
+                                About
+                            </a>
+                            {% if current_user.is_authenticated %}
+                                <a class="navbar-item" href="{{ url_for('main.account_dash') }}">
+                                    Account
+                                </a>
+                                <div class="navbar-item">
+                                    <a class="button is-light"
+                                       href="{{ url_for('main.log_user_out') }}">
+                                        Sign Out
+                                    </a>
+                                </div>
+                            {% endif %}
                         </div>
-                        {% endif %}
                     </div>
                 </div>
-            </div>
             </nav>
         </div>
         <div class="hero-body">
             <div class="container">
                 <div class="columns">
                     <div class="column">
-                        <h1 class="title">Thailand National Stem Cells Registry</h1>
-                        <h1 class="subtitle">Advancing Thailand Stem Cell Research</h1>
+                        <br><br><br>
+                        <h1 class="title">Thailand National Stem Cell Registry (ThSCReg)</h1>
+                        <h1 class="subtitle is-size-4">
+                            <span class="icon">
+                                <i class="fas fa-rocket"></i>
+                            </span>
+                            For Advancement of Stem Cell Research & Innovation in Thailand</h1>
+                        <br>
+                        <h1 class="title is-size-5">Funded by Thailand Center of Excellence for Life Science (TCELS)</h1>
                     </div>
                     <div class="column is-one-third">
                         <div class="card">
@@ -100,8 +107,10 @@
                     </div>
                 </div>
                 <div class="columns">
-                    <div class="column">
-                        <p class="subtitle has-text-centered">Last Validated Cell Lines</p>
+                    <div class="column has-text-centered">
+                        <p class="subtitle">Last Validated Cell Lines</p>
+                        <span class="tag is-light is-normal">ASC001-30</span>
+                        <span class="tag is-light is-normal">ASC001-30</span>
                     </div>
                 </div>
                 <div class="columns">
@@ -130,16 +139,77 @@
                     <h1 class="title">
                         About ThSCReg
                     </h1>
+                    <div class="notification">
+                        <div class="content">
+                            <h3>
+                            <span class="icon">
+                                <i class="fas fa-question-circle"></i>
+                            </span>&nbsp;What is ThSCReg</h3>
+                            <p>
+                                <small>
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+                                    incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
+                                    exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute
+                                    irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+                                    pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia
+                                    deserunt mollit anim id est laborum
+                                </small>
+                            </p>
+                            <button class="button is-light is-rounded">More</button>
+                        </div>
+                    </div>
                 </div>
                 <div class="column">
                     <h1 class="title">
                         Events
                     </h1>
+                    {% for proj in projects %}
+                        <div class="notification">
+                            <div class="content">
+                                <p>
+                                    <strong>{{ proj.title }} ({{ proj.acronym }})</strong>
+                                    <br>
+                                    <span class="icon">
+                                       <i class="far fa-calendar-alt"></i>
+                                    </span>&nbsp;<small><strong>{{ proj.startdate|shortdate }}</strong> to
+                                    <strong>{{ proj.enddate|shortdate }}</strong></small>
+                                    <small>
+                                        by {{ proj.creator.profile.first_name_th }} {{ proj.creator.profile.last_name_th }}</small>
+                                    <br>
+                                    <span class="icon">
+                                        <i class="fas fa-info-circle"></i>
+                                    </span>&nbsp;<small>{{ proj.summary|truncate(150, True) }}</small>
+                                    <a class="button is-small is-light is-rounded">
+                                        <small>More</small>
+                                    </a>
+                                </p>
+                            </div>
+                        </div>
+                    {% endfor %}
                 </div>
                 <div class="column">
                     <h1 class="title">
                         Recent Projects
                     </h1>
+                    {% for proj in projects %}
+                        <article class="message">
+                            <div class="message-header">
+                                {{ proj.title }} ({{ proj.acronym }})
+                                <span class="tag is-warning is-normal">Pending</span>
+                            </div>
+                            <div class="message-body">
+                                <p class="content">
+                                    <small>{{ proj.summary|truncate(200, True) }}</small>
+                                    <a class="button is-small is-light is-rounded">
+                                        <small>More</small>
+                                    </a>
+                                    <br>
+                                    <span class="tag is-link is-normal">ASC001-30</span>
+                                    <span class="tag is-link is-normal">ASC001-30</span>
+                                </p>
+                            </div>
+                        </article>
+                    {% endfor %}
                 </div>
             </div>
         </div>

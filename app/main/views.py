@@ -26,7 +26,11 @@ def index():
             for error in errors:
                 error_msg[field].append(error)
 
-    return render_template('main/index.html', form=form, error_msg=error_msg)
+    projects = Project.query.all()[:3]
+
+    return render_template('main/index.html', form=form,
+                           error_msg=error_msg,
+                           projects=projects*3)
 
 
 @main.route('/login_form', methods=['GET', 'POST'])
