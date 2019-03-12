@@ -23,26 +23,34 @@
                             <form method="post">
                                 {{ form.hidden_tag() }}
                                 <div class="field">
-                                    <div class="control">
+                                    <div class="control has-icons-left">
                                         {{ form.email(placeholder='Email Address', class='input') }}
+                                        <span class="icon">
+                                            <i class="fas fa-envelope"></i>
+                                        </span>
                                     </div>
                                 </div>
                                 <div class="field">
-                                    <div class="control">
+                                    <div class="control has-icons-left">
                                         {{ form.password(placeholder='Password', class='input') }}
+                                        <span class="icon">
+                                            <i class="fas fa-lock"></i>
+                                        </span>
                                     </div>
                                 </div>
                                 <div class="has-text-centered">
                                     {{ form.submit(class='button is-info') }}
                                 </div>
                             </form>
-                            <hr>
-                            <div class="has-text-centered">
-                                <a href="/">
-                                    <p>Forgot Password?</p>
-                                </a>
-                            </div>
                         </div>
+                        <footer class="card-footer">
+                            <a class="card-footer-item" href="/">
+                                <span class="icon">
+                                    <i class="fas fa-home"></i>
+                                </span>&nbsp;Home
+                            </a>
+                            <a class="card-footer-item">Forgot Password?</a>
+                        </footer>
                     </div>
                 </div>
             </div>

@@ -1,10 +1,10 @@
-from flask import render_template, redirect, request
+from flask import render_template, redirect, request, url_for
 from . import mainbp as main
 from .forms import SignUpForm, LogInForm
 from collections import defaultdict
 from .models import User
 from ..app import db
-from flask_login import login_user, current_user
+from flask_login import login_user, current_user, logout_user
 
 @main.route('/', methods=['GET', 'POST'])
 def index():
@@ -48,3 +48,13 @@ def log_user_in():
 
     return render_template('main/login.html', form=form,
                            error_msg=error_msg)
+
+
+@main.route('/logout_form', methods=['GET', 'POST'])
+def log_user_out():
+    if current_user.is_authenticated:
+        form = LogInForm()
+        logout_user()
+        return render_template('main/logout.html', form=form)
+    else:
+        return redirect(url_for('main.log_user_in'))
