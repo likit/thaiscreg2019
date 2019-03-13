@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Thai SCReg Main Page{% endblock %}
+
 {% block content %}
     <section class="hero is-info is-bold">
         <div class="hero-head">
@@ -18,22 +18,10 @@
                             <a class="navbar-item" href="/">
                                 Home
                             </a>
-                            <a class="navbar-item">
-                                Cells
-                            </a>
-                            <a class="navbar-item" href="{{ url_for('main.show_projects') }}">
-                                Projects
-                            </a>
-                            <a class="navbar-item">
-                                Researchers
-                            </a>
-                            <a class="navbar-item">
-                                About
-                            </a>
                             {% if current_user.is_authenticated %}
-                                <div class="navbar-item" >
+                                <div class="navbar-item">
                                     <div class="buttons">
-                                        <a class="button is-rounded is-light"
+                                        <a class="button is-rounded is-link"
                                            href="{{ url_for('main.account_dash') }}">
                                             <span class="icon">
                                                 <i class="fas fa-user-circle"></i>
@@ -62,35 +50,65 @@
             </nav>
         </div>
         <div class="hero-body">
-            <div class="container">
-                <p><h1 class="title">{{ current_user.profile.academic_title_th }} {{ current_user.profile.first_name_th }} {{ current_user.profile.last_name_th }}</h1>
-                <h1 class="subtitle">{{ current_user.profile.first_name_en }} {{ current_user.profile.last_name_en }}</h1></p>
-                <p><h1 class="subtitle">สังกัด {{ current_user.profile.affil.name_th }} วิทยาเขต {{ current_user.profile.affil.campus }}</h1></p>
+            <div class="container has-text-centered">
+                <div class="columns">
+                    <div class="column">
+                        <img src="{{ url_for('static', filename='img/network.png') }}" width="200">
+                        <h1 class="title">Register Project</h1>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="hero-foot">
-            <nav class="tabs is-boxed is-fullwidth">
-                <div class="container">
-                    <ul>
-                        <li {% if page_name=='dashboard' %}class="is-active"{% endif %}>
-                            <a href="{{ url_for('main.account_dash') }}">Overview</a>
-                        </li>
-                        <li {% if page_name=='profile' %}class="is-active"{% endif %}>
-                            <a href="{{ url_for('main.edit_profile') }}">Profile</a>
-                        </li>
-                        <li {% if page_name=='cell' %}class="is-active"{% endif %}>
-                            <a href="{{ url_for('main.account_cells') }}">Cells</a>
-                        </li>
-                        <li {% if page_name=='project' %}class="is-active"{% endif %}>
-                            <a href="{{ url_for('main.account_projects') }}">Project</a>
-                        </li>
-                    </ul>
+    </section>
+    <section class="section" id="app">
+        <div class="container">
+            <form method="post">
+                {{ form.hidden_tag() }}
+                <div class="columns">
+                    <div class="column is-two-thirds is-offset-2">
+                        <div class="card">
+                            <div class="card-header">
+                                <p class="card-header-title">Registration Form</p>
+                            </div>
+                            <div class="card-content">
+                                <div class="field is-horizontal">
+                                    <div class="field-label is-normal">
+                                        <label class="label">
+                                            {{ form.title.label }}
+                                        </label>
+                                    </div>
+                                    <div class="field-body">
+                                        <div class="field">
+                                            <p class="control is-expanded">
+                                                {{ form.title(class="input") }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </nav>
+                <div class="columns">
+                    <div class="column has-text-centered">
+                        {{ form.submit(class="button is-rounded is-link") }}
+                    </div>
+                </div>
+            </form>
         </div>
     </section>
-    <section class="section">
-        {% block account_content %}
-        {% endblock %}
-    </section>
+{% endblock %}
+{% block scripts %}
+    {{ super() }}
+    <script>
+        var vueApp = new Vue({
+            el: '#app',
+            delimiters: ['<%', '%>'],
+            data() {
+                return {
+                    altNames: [],
+                }
+            }
+        });
+    </script>
 {% endblock %}

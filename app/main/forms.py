@@ -1,5 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, PasswordField
+from wtforms import (StringField, SubmitField, PasswordField,
+                     RadioField, SelectField, BooleanField, DateField)
 from wtforms.widgets import TextArea
 from wtforms.validators import Email, DataRequired, Length, EqualTo
 
@@ -32,4 +33,42 @@ class ProfileForm(FlaskForm):
     lastname_th = StringField('Thai Last Name')
     phone = StringField('Phone')
     street = StringField('Street', widget=TextArea())
+    submit = SubmitField('Submit')
+
+
+class RegisterCellForm(FlaskForm):
+    cell_type = RadioField('Cell Type',
+                           choices=[('hiPSC', 'hiPSC'), ('hESC', 'hESC'), ('MSC', 'MSC')],
+                           validators=[DataRequired()])
+    institution = SelectField('Institution',
+                              validators=[DataRequired(), ])
+    code_name = StringField('Code Name', validators=[DataRequired()])
+    comment = StringField('Comment', widget=TextArea())
+    alternative_names = StringField('Alternative Name(s)')
+    available = SelectField('Availability', choices=[
+        ('0', 'Available'),
+        ('1', 'Available for Non-commercial Research')
+    ])
+    karyotyped = SelectField('Has the cell line been karyotyped?',
+                             choices=[(False, 'No'), (True, 'Yes')])
+    karyotype = StringField('Karyotype')
+    donor_gender = SelectField('Sex', choices=[('male', 'Male'), ('female', 'Female')])
+    donor_diseases = StringField('Diseases')
+    donor_disease_assoc_phenotypes = StringField('Disease associated phenotypes')
+    donor_karyotyped = SelectField('Has the donor karyotype been analyzed?',
+                                   choices=[(False, 'No'), (True, 'Yes')])
+    donor_gws = SelectField('Is there genome-wide genotyping or functional data available?',
+                            choices=[(False, 'No'), (True, 'Yes')])
+    submit = SubmitField('Submit')
+
+
+class RegisterProjectForm(FlaskForm):
+    title = StringField('Title', validators=[DataRequired()])
+    acronym = StringField('acronym')
+    summary = StringField('summary')
+    website = StringField('website')
+    startdate = DateField('Start Date', validators=[DataRequired()])
+    enddate = DateField('End Date', validators=[DataRequired()])
+    sponsor_name = StringField('Sponsor Name')
+    institution = StringField('Institution Name')
     submit = SubmitField('Submit')

@@ -1,6 +1,6 @@
 from flask import render_template, redirect, request, url_for
 from . import mainbp as main
-from .forms import SignUpForm, LogInForm, ProfileForm
+from .forms import SignUpForm, LogInForm, ProfileForm, RegisterCellForm, RegisterProjectForm
 from collections import defaultdict
 from .models import User, Project, Event
 from ..app import db
@@ -218,4 +218,14 @@ def account_cells():
 @main.route('/cell/register', methods=['GET', 'POST'])
 @login_required
 def register_cell():
-    return render_template('main/register_cell.html')
+    form = RegisterCellForm()
+    form.institution.choices = [(current_user.profile.affil.id,
+                         current_user.profile.affil.name_th)]
+    return render_template('main/register_cell.html', form=form)
+
+
+@main.route('/project/register', methods=['GET', 'POST'])
+@login_required
+def register_project():
+    form = RegisterProjectForm()
+    return render_template('main/register_project.html', form=form)

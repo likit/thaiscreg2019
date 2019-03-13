@@ -1,0 +1,285 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <section class="hero is-info is-bold">
+        <div class="hero-head">
+            <nav class="navbar">
+                <div class="container">
+                    <div class="navbar-brand">
+                        <a role="button" class="navbar-burger burger" aria-label="menu"
+                           aria-expanded="false" data-target="navbarBasicExample">
+                            <span aria-hidden="true"></span>
+                            <span aria-hidden="true"></span>
+                            <span aria-hidden="true"></span>
+                        </a>
+                    </div>
+                    <div id="navbarBasicExample" class="navbar-menu">
+                        <div class="navbar-end">
+                            <a class="navbar-item" href="/">
+                                Home
+                            </a>
+                            {% if current_user.is_authenticated %}
+                                <div class="navbar-item">
+                                    <div class="buttons">
+                                        <a class="button is-rounded is-light"
+                                           href="{{ url_for('main.account_dash') }}">
+                                            <span class="icon">
+                                                <i class="fas fa-user-circle"></i>
+                                            </span>&nbsp;
+                                            Account
+                                        </a>
+                                        <a class="button is-danger is-rounded"
+                                           href="{{ url_for('main.log_user_out') }}">
+                                            <span class="icon">
+                                               <i class="fas fa-power-off"></i>
+                                            </span>
+                                        </a>
+                                    </div>
+                                </div>
+                            {% else %}
+                                <div class="navbar-item">
+                                    <a class="button is-link is-rounded"
+                                       href="{{ url_for('main.log_user_in') }}">
+                                        Log In
+                                    </a>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </div>
+        <div class="hero-body">
+            <div class="container has-text-centered">
+                <div class="columns">
+                    <div class="column">
+                        <img src="{{ url_for('static', filename='img/network.png') }}" width="200">
+                        <h1 class="title">Register Cell</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="section" id="app">
+        <div class="container">
+            <form method="post">
+                {{ form.hidden_tag() }}
+                <div class="columns">
+                    <div class="column is-two-thirds is-offset-2">
+                        <div class="card">
+                            <div class="card-header">
+                                <p class="card-header-title">General</p>
+                            </div>
+                            <div class="card-content">
+                                <div class="field is-horizontal">
+                                    <div class="field-label is-normal">
+                                        <label class="label">
+                                            Generator Institution
+                                        </label>
+                                    </div>
+                                    <div class="field-body">
+                                        <div class="field">
+                                            <p class="control is-expanded">
+                                            <div class="select">
+                                                {{ form.institution() }}
+                                            </div>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="field is-horizontal">
+                                    <div class="field-label is-normal">
+                                        <label class="label">
+                                            {{ form.cell_type.label }}
+                                        </label>
+                                    </div>
+                                    <div class="field-body">
+                                        <div class="field">
+                                            <p class="control is-expanded">
+                                            <div class="radio">
+                                                {{ form.cell_type() }}
+                                            </div>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <b-field horizontal label="Alternative Names">
+                                    <b-taginput v-model="altNames" rounded icon="label" type="is-success"></b-taginput>
+                                </b-field>
+                                <div class="field is-horizontal">
+                                    <div class="field-label is-normal">
+                                        <label class="label">
+                                            {{ form.comment.label }}
+                                        </label>
+                                    </div>
+                                    <div class="field-body">
+                                        <div class="field">
+                                            <p class="control is-expanded">
+                                                {{ form.comment(class="textarea") }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="field is-horizontal">
+                                    <div class="field-label is-normal">
+                                        <label class="label">
+                                            Is the cell line is available in principle?
+                                        </label>
+                                    </div>
+                                    <div class="field-body">
+                                        <div class="field">
+                                            <p class="control is-expanded">
+                                                <div class="select">
+                                                    {{ form.available() }}
+                                                </div>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header">
+                                <p class="card-header-title">Donor Information</p>
+                            </div>
+                            <div class="card-content">
+                                <div class="field is-horizontal">
+                                    <div class="field-label is-normal">
+                                        <label class="label">
+                                            {{ form.donor_gender.label }}
+                                        </label>
+                                    </div>
+                                    <div class="field-body">
+                                        <div class="field">
+                                            <p class="control is-expanded">
+                                            <div class="select">
+                                                {{ form.donor_gender() }}
+                                            </div>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="field is-horizontal">
+                                    <div class="field-label is-normal">
+                                        <label class="label">
+                                            {{ form.donor_diseases.label }}
+                                        </label>
+                                    </div>
+                                    <div class="field-body">
+                                        <div class="field">
+                                            <p class="control is-expanded">
+                                                {{ form.donor_diseases(class="input") }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="field is-horizontal">
+                                    <div class="field-label is-normal">
+                                        <label class="label">
+                                            {{ form.donor_disease_assoc_phenotypes.label }}
+                                        </label>
+                                    </div>
+                                    <div class="field-body">
+                                        <div class="field">
+                                            <p class="control is-expanded">
+                                                {{ form.donor_disease_assoc_phenotypes(class="input") }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="field is-horizontal">
+                                    <div class="field-label is-normal">
+                                        <label class="label">
+                                            <strong>{{ form.donor_karyotyped.label }}</strong>
+                                        </label>
+                                    </div>
+                                    <div class="field-body">
+                                        <div class="field">
+                                            <p class="control is-expanded">
+                                                <div class="select">
+                                                    {{ form.donor_karyotyped() }}
+                                                </div>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="field is-horizontal">
+                                    <div class="field-label is-normal">
+                                        <label class="label">
+                                            {{ form.donor_gws.label }}
+                                        </label>
+                                    </div>
+                                    <div class="field-body">
+                                        <div class="field">
+                                            <p class="control is-expanded">
+                                                <div class="select">
+                                                    {{ form.donor_gws() }}
+                                                </div>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header">
+                                <p class="card-header-title">Genotyping</p>
+                            </div>
+                            <div class="card-content">
+                                <div class="field is-horizontal">
+                                    <div class="field-label is-normal">
+                                        <label class="label">
+                                            {{ form.karyotyped.label }}
+                                        </label>
+                                    </div>
+                                    <div class="field-body">
+                                        <div class="field">
+                                            <p class="control is-expanded">
+                                                <div class="select">
+                                                    {{ form.karyotyped() }}
+                                                </div>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="field is-horizontal">
+                                    <div class="field-label is-normal">
+                                        <label class="label">
+                                            {{ form.karyotype.label }}
+                                        </label>
+                                    </div>
+                                    <div class="field-body">
+                                        <div class="field">
+                                            <p class="control is-expanded">
+                                                {{ form.karyotype(class="input") }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="columns">
+                    <div class="column has-text-centered">
+                        {{ form.submit(class="button is-rounded is-link") }}
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+{% endblock %}
+{% block scripts %}
+    {{ super() }}
+    <script>
+        var vueApp = new Vue({
+            el: '#app',
+            delimiters: ['<%', '%>'],
+            data() {
+                return {
+                    altNames: [],
+                }
+            }
+        });
+    </script>
+{% endblock %}

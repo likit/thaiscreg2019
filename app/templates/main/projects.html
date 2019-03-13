@@ -34,7 +34,7 @@
                             {% if current_user.is_authenticated %}
                                 <div class="navbar-item" >
                                     <div class="buttons">
-                                        <a class="button is-rounded is-link"
+                                        <a class="button is-rounded is-light"
                                            href="{{ url_for('main.account_dash') }}">
                                             <span class="icon">
                                                 <i class="fas fa-user-circle"></i>
@@ -92,6 +92,18 @@
     </section>
     <section class="section">
         <div class="container">
+            <div class="columns">
+                <div class="column has-text-right">
+                    <a class="button is-link is-rounded"
+                       href="{{ url_for('main.register_project') }}"
+                    >
+                        <span class="icon">
+                            <i class="fas fa-plus"></i>
+                        </span>&nbsp;
+                        Register Project
+                    </a>
+                </div>
+            </div>
             <div class="columns">
                 <div class="column">
                     <div class="box" id="app">
