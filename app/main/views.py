@@ -206,3 +206,16 @@ def edit_profile():
     return render_template('main/edit_profile.html', form=form,
                            message=msg, error_msg=error_msg,
                            page_name='profile')
+
+
+@main.route('/account/cells', methods=['GET', 'POST'])
+@login_required
+def account_cells():
+    return render_template('main/account_cells.html',
+                           page_name='cell')
+
+
+@main.route('/cell/register', methods=['GET', 'POST'])
+@login_required
+def register_cell():
+    return render_template('main/register_cell.html')

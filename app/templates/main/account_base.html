@@ -79,7 +79,7 @@
                             <a href="{{ url_for('main.edit_profile') }}">Profile</a>
                         </li>
                         <li {% if page_name=='cell' %}class="is-active"{% endif %}>
-                            <a>Cells</a>
+                            <a href="{{ url_for('main.account_cells') }}">Cells</a>
                         </li>
                         <li {% if page_name=='project' %}class="is-active"{% endif %}>
                             <a href="{{ url_for('main.account_projects') }}">Project</a>
