@@ -26,6 +26,8 @@ login_manager.init_app(app)
 migrate.init_app(app, db)
 admin.init_app(app)
 
+login_manager.login_view = 'main.log_user_in'
+
 from app.main import mainbp as main_blueprint
 from .main.models import *
 
