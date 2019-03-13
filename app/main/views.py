@@ -1,6 +1,6 @@
 from flask import render_template, redirect, request, url_for
 from . import mainbp as main
-from .forms import SignUpForm, LogInForm
+from .forms import SignUpForm, LogInForm, ProfileForm
 from collections import defaultdict
 from .models import User, Project, Event
 from ..app import db
@@ -167,3 +167,42 @@ def show_projects():
                            query=query,
                            projects=filtered_projects)
 
+
+@main.route('/account/profile/edit', methods=['POST', 'GET'])
+@login_required
+def edit_profile():
+    msg = None
+    error_msg = {}
+    pf = current_user.profile
+    form = ProfileForm()
+    if form.validate_on_submit():
+        pf.public_email = form.public_email.data
+        pf.academic_title_th = form.academic_title_th.data
+        pf.title_th = form.title_th.data
+        pf.first_name_en = form.firstname_en.data
+        pf.last_name_en = form.lastname_en.data
+        pf.first_name_th = form.firstname_th.data
+        pf.last_name_th = form.lastname_th.data
+        pf.phone = form.phone.data
+        pf.street = form.street.data
+        db.session.add(pf)
+        db.session.commit()
+        msg = 'Your profile has been updated.'
+    else:
+        for field, errors in form.errors.items():
+            for error in errors:
+                error_msg[field].append(error)
+
+    form.public_email.data = pf.public_email
+    form.title_th.data = pf.title_th
+    form.academic_title_th.data = pf.academic_title_th
+    form.firstname_th.data = pf.first_name_th
+    form.lastname_th.data = pf.last_name_th
+    form.firstname_en.data = pf.first_name_en
+    form.lastname_en.data = pf.last_name_en
+    form.street.data = pf.street
+    form.phone.data = pf.phone
+
+    return render_template('main/edit_profile.html', form=form,
+                           message=msg, error_msg=error_msg,
+                           page_name='profile')

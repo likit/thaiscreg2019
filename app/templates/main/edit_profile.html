@@ -1,0 +1,144 @@
+{% extends "main/account_base.html" %}
+
+{% block account_content %}
+<div class="container">
+    <div id="app" class="columns">
+        {% if message %}
+            <div class="column">
+                <b-notification type="is-success" has-icon>
+                    {{ message }}
+                </b-notification>
+            </div>
+        {% endif %}
+    </div>
+    <div class="columns">
+        <div class="column">
+            <div class="box" id="app">
+                <form method="post">
+                    {{ form.hidden_tag() }}
+                    <div class="field is-horizontal">
+                        <div class="field-label is-normal">
+                            <label>
+                                {{ form.public_email.label }}
+                            </label>
+                        </div>
+                        <div class="field-body">
+                            <div class="field">
+                                <div class="control is-expanded">
+                                    {{ form.public_email(class="input", placeholder="Email") }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field is-horizontal">
+                        <div class="field-label is-normal">
+                            <label>
+                                Title
+                            </label>
+                        </div>
+                        <div class="field-body">
+                            <div class="field">
+                                <div class="control is-expanded">
+                                    {{ form.title_th(class="input", placeholder="Title") }}
+                                </div>
+                                <p class="help is-link">e.g. นาย, น.ส., ดร.</p>
+                            </div>
+                            <div class="field">
+                                <div class="control is-expanded">
+                                    {{ form.academic_title_th(class="input", placeholder="Academic Title") }}
+                                </div>
+                                <p class="help is-link">e.g. ผ.ศ., ร.ศ.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field is-horizontal">
+                        <div class="field-label is-normal">
+                            <label>
+                                Thai Name
+                            </label>
+                        </div>
+                        <div class="field-body">
+                            <div class="field">
+                                <div class="control is-expanded">
+                                    {{ form.firstname_th(class="input", placeholder="First Name") }}
+                                </div>
+                            </div>
+                            <div class="field">
+                                <div class="control is-expanded">
+                                    {{ form.lastname_th(class="input", placeholder="Last Name") }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field is-horizontal">
+                        <div class="field-label is-normal">
+                            <label>
+                                English Name
+                            </label>
+                        </div>
+                        <div class="field-body">
+                            <div class="field">
+                                <div class="control is-expanded">
+                                    {{ form.firstname_en(class="input", placeholder="First Name") }}
+                                </div>
+                            </div>
+                            <div class="field">
+                                <div class="control is-expanded">
+                                    {{ form.lastname_en(class="input", placeholder="Last Name") }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field is-horizontal">
+                        <div class="field-label is-normal">
+                            <label>
+                                Phone
+                            </label>
+                        </div>
+                        <div class="field-body">
+                            <div class="field">
+                                <div class="control is-expanded">
+                                    {{ form.phone(class="input", placeholder="Phone") }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field is-horizontal">
+                        <div class="field-label is-normal">
+                            <label>
+                                Street Address
+                            </label>
+                        </div>
+                        <div class="field-body">
+                            <div class="field">
+                                <div class="control is-expanded">
+                                    {{ form.street(class="textarea", placeholder="Street Address") }}
+                                </div>
+                                <p class="help is-link">e.g. ที่อยู่ห้องทำงานหรือสำนักงาน</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field is-horizontal">
+                        <div class="field-label is-normal"></div>
+                        <div class="field-body">
+                            <div class="field">
+                                <div class="control is-expanded">
+                                    {{ form.submit(class="button is-link") }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+    {{ super() }}
+    <script>
+        var vueApp = new Vue({
+            el: '#app',
+        });
+    </script>
+{% endblock %}
