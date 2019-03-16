@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <section class="hero is-info is-bold">
+    <section class="hero is-info is-bold is-small">
         <div class="hero-head">
             <nav class="navbar">
                 <div class="container">
@@ -53,8 +53,8 @@
             <div class="container has-text-centered">
                 <div class="columns">
                     <div class="column">
-                        <img src="{{ url_for('static', filename='img/network.png') }}" width="200">
-                        <h1 class="title">Register Cell</h1>
+                        <img src="{{ url_for('static', filename='img/flask.png') }}" width="100">
+                        <h1 class="title">Register Cell Line</h1>
                     </div>
                 </div>
             </div>
@@ -65,10 +65,11 @@
             <form method="post">
                 {{ form.hidden_tag() }}
                 <div class="columns">
-                    <div class="column is-two-thirds is-offset-2">
+                    <div class="column">
+                        <h2 class="title has-text-link">General</h2>
                         <div class="card">
                             <div class="card-header">
-                                <p class="card-header-title">General</p>
+                                <p class="card-header-title">Cell Line</p>
                             </div>
                             <div class="card-content">
                                 <div class="field is-horizontal">
@@ -97,7 +98,10 @@
                                         <div class="field">
                                             <p class="control is-expanded">
                                             <div class="radio">
-                                                {{ form.cell_type() }}
+                                            {% for ct in form.cell_type %}
+                                                {{ ct(**{'v-model': 'cellType'}) }}
+                                                {{ ct.label }}
+                                            {% endfor %}
                                             </div>
                                             </p>
                                         </div>
@@ -138,9 +142,10 @@
                                 </div>
                             </div>
                         </div>
+                        <br><h2 class="title has-text-link">Donor Information</h2>
                         <div class="card">
                             <div class="card-header">
-                                <p class="card-header-title">Donor Information</p>
+                                <p class="card-header-title">General Donor Information</p>
                             </div>
                             <div class="card-content">
                                 <div class="field is-horizontal">
@@ -159,6 +164,13 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header">
+                                <p class="card-header-title">Phenotype And Disease Related Information (Donor)</p>
+                            </div>
+                            <div class="card-content">
                                 <div class="field is-horizontal">
                                     <div class="field-label is-normal">
                                         <label class="label">
@@ -187,6 +199,13 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header">
+                                <p class="card-header-title">Karyotyping (Donor)</p>
+                            </div>
+                            <div class="card-content">
                                 <div class="field is-horizontal">
                                     <div class="field-label is-normal">
                                         <label class="label">
@@ -221,9 +240,637 @@
                                 </div>
                             </div>
                         </div>
+                        <br><h2 class="title has-text-link" v-if="cellType=='MSC'">MSC Derivation</h2>
+                        <div class="card" v-if="cellType==='MSC'">
+                            <div class="card-content">
+                                <div class="field is-horizontal">
+                                    <div class="field-label is-normal">
+                                        <label class="label">
+                                            {{ form.source_cell_origin.label }}
+                                        </label>
+                                    </div>
+                                    <div class="field-body">
+                                        <div class="field">
+                                            <p class="control is-expanded">
+                                                {{ form.source_cell_origin(class="input") }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br><h2 class="title has-text-link" v-if="cellType=='hESC'">HESC Derivation</h2>
+                        <div class="card" v-if="cellType==='hESC'">
+                            <div class="card-content">
+                                <div class="field is-horizontal">
+                                    <div class="field-label is-normal">
+                                        <label class="label">
+                                            {{ form.embryo_stage.label }}
+                                        </label>
+                                    </div>
+                                    <div class="field-body">
+                                        <div class="field">
+                                            <p class="control is-expanded">
+                                                {{ form.embryo_stage(class="input") }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="field is-horizontal">
+                                    <div class="field-label is-normal">
+                                        <label class="label">
+                                            {{ form.ivf_treatment.label }}
+                                        </label>
+                                    </div>
+                                    <div class="field-body">
+                                        <div class="field">
+                                            <p class="control is-expanded">
+                                                <div class="select">
+                                                    {{ form.ivf_treatment(class="input") }}
+                                                </div>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="field is-horizontal">
+                                    <div class="field-label is-normal">
+                                        <label class="label">
+                                            {{ form.pgd_embryo.label }}
+                                        </label>
+                                    </div>
+                                    <div class="field-body">
+                                        <div class="field">
+                                            <p class="control is-expanded">
+                                            <div class="select">
+                                                {{ form.pgd_embryo(class="input") }}
+                                            </div>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="field is-horizontal">
+                                    <div class="field-label is-normal">
+                                        <label class="label">
+                                            {{ form.zp_removal_technique.label }}
+                                        </label>
+                                    </div>
+                                    <div class="field-body">
+                                        <div class="field">
+                                            <p class="control is-expanded">
+                                                {{ form.zp_removal_technique(class="input") }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="field is-horizontal">
+                                    <div class="field-label is-normal">
+                                        <label class="label">
+                                            {{ form.cell_isolation.label }}
+                                        </label>
+                                    </div>
+                                    <div class="field-body">
+                                        <div class="field">
+                                            <p class="control is-expanded">
+                                                {{ form.cell_isolation(class="input") }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="field is-horizontal">
+                                    <div class="field-label is-normal">
+                                        <label class="label">
+                                            {{ form.cell_seeding.label }}
+                                        </label>
+                                    </div>
+                                    <div class="field-body">
+                                        <div class="field">
+                                            <p class="control is-expanded">
+                                                {{ form.cell_seeding(class="input") }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br><h2 class="title has-text-link" v-if="cellType=='hiPSC'">HIPSC Derivation</h2>
+                        <div class="card" v-if="cellType==='hiPSC'">
+                            <div class="card-header">
+                                <p class="card-header-title">General</p>
+                            </div>
+                            <div class="card-content">
+                                <div class="field is-horizontal">
+                                    <div class="field-label is-normal">
+                                        <label class="label">
+                                            {{ form.source_cell_type.label }}
+                                        </label>
+                                    </div>
+                                    <div class="field-body">
+                                        <div class="field">
+                                            <p class="control is-expanded">
+                                                {{ form.source_cell_type(class="input") }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="field is-horizontal">
+                                    <div class="field-label is-normal">
+                                        <label class="label">
+                                            {{ form.source_cell_origin.label }}
+                                        </label>
+                                    </div>
+                                    <div class="field-body">
+                                        <div class="field">
+                                            <p class="control is-expanded">
+                                                {{ form.source_cell_origin(class="input") }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="field is-horizontal">
+                                    <div class="field-label is-normal">
+                                        <label class="label">
+                                            {{ form.donor_age_collection.label }}
+                                        </label>
+                                    </div>
+                                    <div class="field-body">
+                                        <div class="field">
+                                            <p class="control is-expanded">
+                                                {{ form.donor_age_collection(class="input", type="number") }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="field is-horizontal">
+                                    <div class="field-label is-normal">
+                                        <label class="label">
+                                            {{ form.collected_in.label }}
+                                        </label>
+                                    </div>
+                                    <div class="field-body">
+                                        <div class="field">
+                                            <p class="control is-expanded">
+                                                {{ form.collected_in(class="input", type="number") }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card" v-if="cellType=='hiPSC'">
+                            <div class="card-header">
+                                <p class="card-header-title">Reprogramming Method</p>
+                            </div>
+                            <div class="card-content">
+                                <div class="field is-horizontal">
+                                    <div class="field-label is-normal">
+                                        <label class="label">
+                                            {{ form.vector_type.label }}
+                                        </label>
+                                    </div>
+                                    <div class="field-body">
+                                        <div class="field">
+                                            <p class="control is-expanded">
+                                            <div class="select">
+                                                {{ form.vector_type(class="input") }}
+                                            </div>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="field is-horizontal">
+                                    <div class="field-label is-normal">
+                                        <label class="label">
+                                            {{ form.vector.label }}
+                                        </label>
+                                    </div>
+                                    <div class="field-body">
+                                        <div class="field">
+                                            <p class="control is-expanded">
+                                                {{ form.vector(class="input") }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card" v-if="cellType=='hiPSC'">
+                            <div class="card-header">
+                                <p class="card-header-title">Other</p>
+                            </div>
+                            <div class="card-content">
+                                <div class="field is-horizontal">
+                                    <div class="field-label is-normal">
+                                        <label class="label">
+                                            {{ form.selection_criteria.label }}
+                                        </label>
+                                    </div>
+                                    <div class="field-body">
+                                        <div class="field">
+                                            <p class="control is-expanded">
+                                                {{ form.selection_criteria(class="input") }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="field is-horizontal">
+                                    <div class="field-label is-normal">
+                                        <label class="label">
+                                            {{ form.xeno_free.label }}
+                                        </label>
+                                    </div>
+                                    <div class="field-body">
+                                        <div class="field">
+                                            <p class="control is-expanded">
+                                            <div class="select">
+                                                {{ form.xeno_free(class="input") }}
+                                            </div>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="field is-horizontal">
+                                    <div class="field-label is-normal">
+                                        <label class="label">
+                                            {{ form.under_gmp.label }}
+                                        </label>
+                                    </div>
+                                    <div class="field-body">
+                                        <div class="field">
+                                            <p class="control is-expanded">
+                                            <div class="select">
+                                                {{ form.under_gmp(class="input") }}
+                                            </div>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="field is-horizontal">
+                                    <div class="field-label is-normal">
+                                        <label class="label">
+                                            {{ form.clinical_grade_avail.label }}
+                                        </label>
+                                    </div>
+                                    <div class="field-body">
+                                        <div class="field">
+                                            <p class="control is-expanded">
+                                            <div class="select">
+                                                {{ form.clinical_grade_avail(class="input") }}
+                                            </div>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br><h2 class="title has-text-link">Culture Conditions</h2>
+                        <div class="card">
+                            <div class="card-content">
+                                <div class="field is-horizontal">
+                                    <div class="field-label is-normal">
+                                        <label class="label">
+                                            {{ form.culture_surface_coating.label }}
+                                        </label>
+                                    </div>
+                                    <div class="field-body">
+                                        <div class="field">
+                                            <p class="control is-expanded">
+                                                {{ form.culture_surface_coating(class="input") }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="field is-horizontal">
+                                    <div class="field-label is-normal">
+                                        <label class="label">
+                                            {{ form.culture_feeder_cells.label }}
+                                        </label>
+                                    </div>
+                                    <div class="field-body">
+                                        <div class="field">
+                                            <p class="control is-expanded">
+                                                <div class="select">
+                                                    {{ form.culture_feeder_cells() }}
+                                                </div>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="field is-horizontal">
+                                    <div class="field-label is-normal">
+                                        <label class="label">
+                                            {{ form.culture_passage_method.label }}
+                                        </label>
+                                    </div>
+                                    <div class="field-body">
+                                        <div class="field">
+                                            <p class="control is-expanded">
+                                                {{ form.culture_passage_method(class="input") }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="field is-horizontal">
+                                    <div class="field-label is-normal">
+                                        <label class="label">
+                                            {{ form.culture_o2_conc.label }}
+                                        </label>
+                                    </div>
+                                    <div class="field-body">
+                                        <div class="field has-addons">
+                                            <p class="control is-expanded">
+                                                {{ form.culture_o2_conc(class="input", type="number") }}
+                                            </p>
+                                            <p class="control">
+                                                <a class="button is-static">%</a>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="field is-horizontal">
+                                    <div class="field-label is-normal">
+                                        <label class="label">
+                                            {{ form.culture_co2_conc.label }}
+                                        </label>
+                                    </div>
+                                    <div class="field-body">
+                                        <div class="field has-addons">
+                                            <p class="control is-expanded">
+                                                {{ form.culture_co2_conc(class="input", type="number") }}
+                                            </p>
+                                            <p class="control">
+                                                <a class="button is-static">%</a>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="field is-horizontal">
+                                    <div class="field-label is-normal">
+                                        <label class="label">
+                                            {{ form.culture_medium.label }}
+                                        </label>
+                                    </div>
+                                    <div class="field-body">
+                                        <div class="field">
+                                            <p class="control is-expanded">
+                                                {{ form.culture_medium(class="input") }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="field is-horizontal">
+                                    <div class="field-label is-normal">
+                                        <label class="label">
+                                            {{ form.culture_rock_inhibitor_used_at_passage.label }}
+                                        </label>
+                                    </div>
+                                    <div class="field-body">
+                                        <div class="field">
+                                            <p class="control is-expanded">
+                                                <div class="select">
+                                                    {{ form.culture_rock_inhibitor_used_at_passage(class="input") }}
+                                                </div>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="field is-horizontal">
+                                    <div class="field-label is-normal">
+                                        <label class="label">
+                                            {{ form.culture_rock_inhibitor_used_at_cryo.label }}
+                                        </label>
+                                    </div>
+                                    <div class="field-body">
+                                        <div class="field">
+                                            <p class="control is-expanded">
+                                            <div class="select">
+                                                {{ form.culture_rock_inhibitor_used_at_cryo(class="input") }}
+                                            </div>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="field is-horizontal">
+                                    <div class="field-label is-normal">
+                                        <label class="label">
+                                            {{ form.culture_rock_inhibitor_used_at_thaw.label }}
+                                        </label>
+                                    </div>
+                                    <div class="field-body">
+                                        <div class="field">
+                                            <p class="control is-expanded">
+                                            <div class="select">
+                                                {{ form.culture_rock_inhibitor_used_at_thaw(class="input") }}
+                                            </div>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        <h2 class="title has-text-link">Characterization</h2>
                         <div class="card">
                             <div class="card-header">
-                                <p class="card-header-title">Genotyping</p>
+                                <p class="card-header-title">Analysis of Undifferentiated Cells</p>
+                            </div>
+                            <div class="card-content">
+                                <div class="field is-horizontal">
+                                    <div class="field-label is-normal">
+                                        <label class="label"></label>
+                                    </div>
+                                    <div class="field-body">
+                                        <table class="table" v-if="markerList.length > 0">
+                                            <thead>
+                                                <th>Name</th>
+                                                <th>Expressed</th>
+                                                <th>Immunostaining</th>
+                                                <th>RT-PCR</th>
+                                                <th>FACTS</th>
+                                                <th>Enzymatic Assay</th>
+                                                <th>Expression Profiles</th>
+                                            </thead>
+                                            <tbody>
+                                                <tr v-for="mk in markerList">
+                                                    <td><% mk.name %></td>
+                                                    <td>
+                                                        <span class="icon">
+                                                            <i class="fas fa-check has-text-success" v-if="mk.expressed==='yes'"></i>
+                                                            <i class="fas fa-times has-text-danger" v-if="mk.expressed==='no'"></i>
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        <span class="icon">
+                                                            <i class="fas fa-check has-text-success" v-if="mk.immunostaining==='yes'"></i>
+                                                            <i class="fas fa-times has-text-danger" v-if="mk.immunostaining==='no'"></i>
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        <span class="icon">
+                                                            <i class="fas fa-check has-text-success" v-if="mk.rtpcr==='yes'"></i>
+                                                            <i class="fas fa-times has-text-danger" v-if="mk.rtpcr==='no'"></i>
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        <span class="icon">
+                                                            <i class="fas fa-check has-text-success" v-if="mk.facts==='yes'"></i>
+                                                            <i class="fas fa-times has-text-danger" v-if="mk.facts==='no'"></i>
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        <% mk.enzyme %>
+                                                    </td>
+                                                    <td>
+                                                        <% mk.profiles %>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="field is-horizontal">
+                                    <div class="field-label is-normal">
+                                        <label class="label">
+                                            <button class="button is-success is-rounded" :disabled="markerName===''"
+                                                type="button" @click="addMarker($event)">
+                                                Add Marker</button>
+                                        </label>
+                                    </div>
+                                    <div class="field-body">
+                                        <div class="field">
+                                            <label>Name</label>
+                                            <p class="control is-expanded">
+                                                <input type="text" class="input" v-model="markerName"
+                                                    placeholder="Marker Name"
+                                                       @keydown.enter="addMarker($event)"
+                                                    >
+                                            </p>
+                                        </div>
+                                        <div class="field">
+                                            <label>
+                                                Expressed
+                                            </label>
+                                            <p class="control is-expanded">
+                                            <div class="select">
+                                                <select v-model="markerExpression">
+                                                    <option value="no">No</option>
+                                                    <option value="yes">Yes</option>
+                                                </select>
+                                            </div>
+                                            </p>
+                                        </div>
+                                        <div class="field">
+                                            <label>
+                                                Immunostaining
+                                            </label>
+                                            <p class="control is-expanded">
+                                            <div class="select">
+                                                <select v-model="markerImmunostaining">
+                                                    <option value="no">No</option>
+                                                    <option value="yes">Yes</option>
+                                                </select>
+                                            </div>
+                                            </p>
+                                        </div>
+                                        <div class="field">
+                                            <label>
+                                                RT-PCR
+                                            </label>
+                                            <p class="control is-expanded">
+                                            <div class="select">
+                                                <select v-model="markerRTPCR">
+                                                    <option value="no">No</option>
+                                                    <option value="yes">Yes</option>
+                                                </select>
+                                            </div>
+                                            </p>
+                                        </div>
+                                        <div class="field">
+                                            <label>
+                                                FACTS
+                                            </label>
+                                            <p class="control is-expanded">
+                                            <div class="select">
+                                                <select v-model="markerFACTS">
+                                                    <option value="no">No</option>
+                                                    <option value="yes">Yes</option>
+                                                </select>
+                                            </div>
+                                            </p>
+                                        </div>
+                                        <div class="field">
+                                            <label>
+                                                Enzymatic Assay
+                                            </label>
+                                            <p class="control is-expanded">
+                                                <input type="text" class="input" v-model="markerEnzyme">
+                                            </p>
+                                        </div>
+                                        <div class="field">
+                                            <label>
+                                                Expression Profiles
+                                            </label>
+                                            <p class="control is-expanded">
+                                                <input type="text" class="input" v-model="markerProfiles">
+                                            </p>
+                                        </div>
+                                        <input type="hidden" name="markerData" v-model="jsonMarkerData">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header">
+                                <p class="card-header-title">Differentiation Potency</p>
+                            </div>
+                            <div class="card-content">
+                                <div class="field is-horizontal">
+                                    <div class="field-label is-normal">
+                                        <label class="label">
+                                            {{ form.diff_potency_endoderm.label }}
+                                        </label>
+                                    </div>
+                                    <div class="field-body">
+                                        <div class="field">
+                                            <p class="control is-expanded">
+                                                {{ form.diff_potency_endoderm(class="input") }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="field is-horizontal">
+                                    <div class="field-label is-normal">
+                                        <label class="label">
+                                            {{ form.diff_potency_mesoderm.label }}
+                                        </label>
+                                    </div>
+                                    <div class="field-body">
+                                        <div class="field">
+                                            <p class="control is-expanded">
+                                                {{ form.diff_potency_mesoderm(class="input") }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="field is-horizontal">
+                                    <div class="field-label is-normal">
+                                        <label class="label">
+                                            {{ form.diff_potency_ectoderm.label }}
+                                        </label>
+                                    </div>
+                                    <div class="field-body">
+                                        <div class="field">
+                                            <p class="control is-expanded">
+                                                {{ form.diff_potency_ectoderm(class="input") }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br><h2 class="title has-text-link">Genotyping</h2>
+                        <div class="card">
+                            <div class="card-header">
+                                <p class="card-header-title">Karyotyping (Cell Line)</p>
                             </div>
                             <div class="card-content">
                                 <div class="field is-horizontal">
@@ -277,8 +924,45 @@
             delimiters: ['<%', '%>'],
             data() {
                 return {
+                    cellType: undefined,
+                    markerName: '',
+                    markerExpression: "no",
+                    markerImmunostaining: "no",
+                    markerRTPCR: "no",
+                    markerFACTS: "no",
+                    markerEnzyme: "",
+                    markerProfiles: "",
                     altNames: [],
+                    markerList: [],
                 }
+            },
+            computed: {
+                jsonMarkerData: function() {
+                    var self = this;
+                    return JSON.stringify(self.markerList);
+                }
+            },
+            methods: {
+                addMarker: function(event) {
+                    var self = this;
+                    self.markerList.push({
+                        name: self.markerName,
+                        expressed: self.markerExpression,
+                        immunostaining: self.markerImmunostaining,
+                        facts: self.markerFACTS,
+                        rtpcr: self.markerRTPCR,
+                        enzyme: self.markerEnzyme,
+                        profiles: self.markerProfiles,
+                    });
+                    self.markerName = '';
+                    self.markerExpression = 'no';
+                    self.markerImmunostaining = 'no';
+                    self.markerRTPCR = "no";
+                    self.markerFACTS = "no";
+                    self.markerEnzyme = "";
+                    self.markerProfiles = "";
+                    event.preventDefault();
+                },
             }
         });
     </script>

@@ -1,8 +1,8 @@
 from flask_wtf import FlaskForm
-from wtforms import (StringField, SubmitField, PasswordField,
-                     RadioField, SelectField, BooleanField, DateField)
+from wtforms import (StringField, SubmitField, PasswordField, DecimalField, HiddenField,
+                     RadioField, SelectField, BooleanField, DateField, IntegerField)
 from wtforms.widgets import TextArea
-from wtforms.validators import Email, DataRequired, Length, EqualTo
+from wtforms.validators import Email, DataRequired, Length, EqualTo, optional
 
 
 class SignUpForm(FlaskForm):
@@ -39,26 +39,71 @@ class ProfileForm(FlaskForm):
 class RegisterCellForm(FlaskForm):
     cell_type = RadioField('Cell Type',
                            choices=[('hiPSC', 'hiPSC'), ('hESC', 'hESC'), ('MSC', 'MSC')],
+                           default='hiPSC',
                            validators=[DataRequired()])
     institution = SelectField('Institution',
                               validators=[DataRequired(), ])
-    code_name = StringField('Code Name', validators=[DataRequired()])
     comment = StringField('Comment', widget=TextArea())
     alternative_names = StringField('Alternative Name(s)')
     available = SelectField('Availability', choices=[
-        ('0', 'Available'),
+        ('0', 'Available with no restrictions'),
         ('1', 'Available for Non-commercial Research')
     ])
     karyotyped = SelectField('Has the cell line been karyotyped?',
-                             choices=[(False, 'No'), (True, 'Yes')])
+                             choices=[('no', 'No'), ('yes', 'Yes')])
     karyotype = StringField('Karyotype')
+    source_cell_type = StringField('Source cell type')
+    source_cell_origin = StringField('Source cell origin')
+    donor_age_collection = IntegerField('Age of donor (at collection)', validators=[optional()])
+    collected_in = IntegerField('Collected in', validators=[optional()])
+    passage_no = IntegerField('Passage number reprogrammed')
+    vector_type = SelectField('Vector type', choices=[('Non-integrating', 'Non-integrating')])
+    vector = StringField('Vector')
+    selection_criteria = StringField('Selection criteria for clones')
+    xeno_free = SelectField('Derived under xeno-free conditions',
+                            choices=[('no', 'No'), ('yes', 'Yes')])
+    under_gmp = SelectField('Derived under GMP?',
+                            choices=[('no', 'No'), ('yes', 'Yes')])
+    clinical_grade_avail = SelectField('Available as clinical grade?',
+                                       choices=[('no', 'No'), ('yes', 'Yes')])
     donor_gender = SelectField('Sex', choices=[('male', 'Male'), ('female', 'Female')])
     donor_diseases = StringField('Diseases')
     donor_disease_assoc_phenotypes = StringField('Disease associated phenotypes')
     donor_karyotyped = SelectField('Has the donor karyotype been analyzed?',
-                                   choices=[(False, 'No'), (True, 'Yes')])
+                                   choices=[('no', 'No'), ('yes', 'Yes')])
     donor_gws = SelectField('Is there genome-wide genotyping or functional data available?',
-                            choices=[(False, 'No'), (True, 'Yes')])
+                            choices=[('no', 'No'), ('yes', 'Yes')])
+    culture_surface_coating = StringField('Surface Coating')
+    culture_feeder_cells = SelectField('Feeder cells',
+                                       choices=[('no', 'No'), ('yes', 'Yes')])
+    culture_passage_method = StringField('Passage Method')
+    culture_o2_conc = DecimalField('O2 Concentration', validators=[optional()])
+    culture_co2_conc = DecimalField('CO2 Concentration', validators=[optional()])
+    culture_medium = StringField('Medium')
+    culture_rock_inhibitor_used_at_passage = SelectField('Has Rock inhibitor (Y27632) been used at passage previously with this cell line?',
+                                                         choices=[('no', 'No'), ('yes', 'Yes')])
+    culture_rock_inhibitor_used_at_cryo = SelectField('Has Rock inhibitor (Y27632) been used at cryo previously with this cell line?',
+                                                      choices=[('no', 'No'), ('yes', 'Yes')])
+    culture_rock_inhibitor_used_at_thaw = SelectField('Has Rock inhibitor (Y27632) been used at thaw previously with this cell line?',
+                                                      choices=[('no', 'No'), ('yes', 'Yes')])
+    character = HiddenField('Characteristics')
+    diff_potency_endoderm = StringField('Endoderm')
+    diff_potency_mesoderm = StringField('Mesoderm')
+    diff_potency_ectoderm = StringField('Ectoderm')
+
+    embryo_stage = StringField('Embryo Stage')
+    ivf_treatment = SelectField('Supernumerary embryos from IVF treatment?',
+                                choices=[('no', 'No'), ('yes', 'Yes')])
+    pgd_embryo = SelectField('PGD Embryo?',
+                             choices=[('no', 'No'), ('yes', 'Yes')])
+    zp_removal_technique = StringField('ZP removal technique')
+    cell_isolation = StringField('Cell isolation')
+    cell_seeding = StringField('Cell seeding')
+
+
+    marker_Alkaline_Phosphatase_enzyme = StringField('Enzymatic Assay')
+    marker_Alkaline_Phosphatase_expr_profile = StringField('Expression Profiles')
+
     submit = SubmitField('Submit')
 
 

@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <section class="hero is-info is-bold">
+    <section class="hero is-info is-bold is-small">
         <div class="hero-head">
             <nav class="navbar">
                 <div class="container">
@@ -66,7 +66,7 @@
             <div class="container has-text-centered">
                 <div class="columns">
                     <div class="column">
-                        <img src="{{ url_for('static', filename='img/network.png') }}" width="200">
+                        <img src="{{ url_for('static', filename='img/network.png') }}" width="100">
                         <h1 class="title">Project Explorer</h1>
                         <h1 class="subtitle">Total of {{ projects|length }} Projects</h1>
                     </div>

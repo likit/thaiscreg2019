@@ -5,6 +5,7 @@ from collections import defaultdict
 from .models import User, Project, Event
 from ..app import db
 from flask_login import login_user, current_user, logout_user, login_required
+from json import loads
 
 @main.route('/', methods=['GET', 'POST'])
 def index():
@@ -219,8 +220,19 @@ def account_cells():
 @login_required
 def register_cell():
     form = RegisterCellForm()
-    form.institution.choices = [(current_user.profile.affil.id,
-                         current_user.profile.affil.name_th)]
+    institutions = [(str(current_user.profile.affil.id),
+                     current_user.profile.affil.name_th)]
+    form.institution.choices = institutions
+    form.institution.default = institutions[0][0]
+
+    if form.validate_on_submit():
+        markers = request.form.get('markerData', '')
+        markers = loads(markers)
+    else:
+        for field, errors in form.errors.items():
+            for error in errors:
+                print(field, error)
+
     return render_template('main/register_cell.html', form=form)
 
 
