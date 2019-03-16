@@ -1,6 +1,7 @@
 from ..app import db
 from datetime import datetime
 from flask_login import UserMixin
+from sqlalchemy.dialects.postgresql.json import JSONB
 
 
 class User(db.Model, UserMixin):
@@ -76,6 +77,25 @@ class Project(db.Model):
     creator = db.relationship('User', backref=db.backref('created_projects'))
     status_id = db.Column('status_id', db.ForeignKey('main_approval_statuses.id'))
     status = db.relationship('ApprovalStatus')
+    view_count = db.Column('view_count', db.Integer(), default=0)
+
+
+class Cell(db.Model):
+    __tablename__ = 'main_cells'
+    id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
+    institution_id = db.Column('institution_id', db.ForeignKey('main_institutions.id'))
+    institution = db.relationship('Institution', backref=db.backref('affiliated_cells'))
+    cell_type = db.Column('cell_type', db.String(64))
+    user_id = db.Column('user_id', db.ForeignKey('main_users.id'))
+    user = db.relationship('User', backref=db.backref('own_cells'))
+    status_id = db.Column('status_id', db.ForeignKey('main_approval_statuses.id'))
+    status = db.relationship('ApprovalStatus', backref=db.backref('cells'))
+    register_datetime = db.Column('register_datetime', db.DateTime(timezone=True),
+                                  default=datetime.utcnow())
+    update_datetime = db.Column('update_datetime', db.DateTime(timezone=True))
+    data = db.Column('data', JSONB)
+    view_count = db.Column('view_count', db.Integer(), default=0)
+
 
 
 class Event(db.Model):
@@ -90,3 +110,4 @@ class Event(db.Model):
     creator_id = db.Column('creator_id', db.ForeignKey('main_users.id'))
     creator = db.relationship('User', backref=db.backref('created_events'))
     closed = db.Column('closed', db.Boolean(), default=False)
+    view_count = db.Column('view_count', db.Integer(), default=0)

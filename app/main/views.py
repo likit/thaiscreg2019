@@ -1,8 +1,9 @@
+from datetime import datetime
 from flask import render_template, redirect, request, url_for
 from . import mainbp as main
 from .forms import SignUpForm, LogInForm, ProfileForm, RegisterCellForm, RegisterProjectForm
 from collections import defaultdict
-from .models import User, Project, Event
+from .models import User, Project, Event, Cell, ApprovalStatus
 from ..app import db
 from flask_login import login_user, current_user, logout_user, login_required
 from json import loads
@@ -212,8 +213,30 @@ def edit_profile():
 @main.route('/account/cells', methods=['GET', 'POST'])
 @login_required
 def account_cells():
+    cells = []
+    for c in current_user.own_cells:
+        cells.append({
+            'id': c.id,
+            'institution_id': c.institution.id,
+            'institution_name': c.institution.name_th,
+            'institution_campus': c.institution.campus,
+            'cell_type': c.cell_type,
+            'alt_names': c.data.get('alt_names', ''),
+            'submitted_by': u'{} {} ({} {})'.format(
+                c.user.profile.first_name_th,
+                c.user.profile.last_name_th,
+                c.user.profile.first_name_en,
+                c.user.profile.last_name_en),
+            'submitter_email': c.user.email,
+            'status': c.status.status,
+            'register_datetime': c.register_datetime,
+            'update_datetime': c.update_datetime,
+            'data': c.data,
+            'view_count': c.view_count or 0,
+        })
     return render_template('main/account_cells.html',
-                           page_name='cell')
+                           page_name='cell',
+                           cells=cells)
 
 
 @main.route('/cell/register', methods=['GET', 'POST'])
@@ -224,10 +247,84 @@ def register_cell():
                      current_user.profile.affil.name_th)]
     form.institution.choices = institutions
     form.institution.default = institutions[0][0]
+    pending_status = ApprovalStatus.query.filter_by(status='pending').first()
 
     if form.validate_on_submit():
         markers = request.form.get('markerData', '')
         markers = loads(markers)
+        print('form validated!')
+        print(form.institution.data, form.comment.data, form.cell_type.data, form.available.data)
+        data = {
+            'alt_names': form.alternative_names.data,
+            'comment': form.comment.data,
+            'donor': {
+                'sex': form.donor_gender.data,
+                'karyotyped': form.donor_karyotyped.data,
+                'diseases': form.donor_diseases.data,
+                'disease_associated_phenotypes': form.donor_disease_assoc_phenotypes.data,
+                'genome_wide_study': form.donor_gws.data,
+            },
+            'culture': {
+                'surface_coating': form.culture_surface_coating.data,
+                'feeder_cells': form.culture_feeder_cells.data,
+                'co2_conc': str(form.culture_co2_conc.data) if form.culture_co2_conc else '',
+                'o2_conc': str(form.culture_o2_conc.data) if form.culture_o2_conc else '',
+                'medium': form.culture_medium.data,
+                'passage_method': form.culture_passage_method.data,
+                'rock_inhibitor_cryo': form.culture_rock_inhibitor_used_at_cryo.data,
+                'rock_inhibitor_passage': form.culture_rock_inhibitor_used_at_passage.data,
+                'rock_inhibitor_thaw': form.culture_rock_inhibitor_used_at_thaw.data,
+            },
+            'characterization': {
+                'markers': markers,
+                '': form.diff_potency_endoderm.data,
+                '': form.diff_potency_ectoderm.data,
+                '': form.diff_potency_mesoderm.data,
+            },
+            'genotyping': {
+                'karyotyped': form.karyotyped.data,
+                'karyotype': form.karyotype.data,
+
+            },
+            'msc': {
+                'source_cell_origin': form.source_cell_origin.data,
+            },
+            'hipsc': {
+                'source_cell_origin': form.source_cell_origin.data,
+                'source_cell_type': form.source_cell_type.data,
+                'age_of_collection': form.donor_age_collection.data,
+                'collected_in': form.collected_in.data,
+                'vector_type': form.vector_type.data,
+                'vector': form.vector.data,
+                'selection_criteria': form.selection_criteria.data,
+                'derived_condition': {
+                    'xeno_free': form.xeno_free.data,
+                    'under_gmp': form.under_gmp.data,
+                },
+                'clinical_grade_available': form.clinical_grade_avail.data
+            },
+            'hesc': {
+                'embryo_stage': form.embryo_stage.data,
+                'ivf_treatment': form.ivf_treatment.data,
+                'pgd_embryo': form.pgd_embryo.data,
+                'zp_removal_technique': form.zp_removal_technique.data,
+                'cell_isolation': form.cell_isolation.data,
+                'cell_seeding': form.cell_seeding.data,
+            },
+        }
+        print(data)
+        cell = Cell(
+            institution_id=int(form.institution.data),
+            cell_type=form.cell_type.data,
+            user=current_user,
+            data=data,
+            status=pending_status,
+            register_datetime=datetime.utcnow(),
+            update_datetime=datetime.utcnow(),
+        )
+        db.session.add(cell)
+        db.session.commit()
+        return redirect(url_for('main.account_cells'))
     else:
         for field, errors in form.errors.items():
             for error in errors:
