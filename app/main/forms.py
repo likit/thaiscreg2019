@@ -93,9 +93,11 @@ class RegisterCellForm(FlaskForm):
 
     embryo_stage = StringField('Embryo Stage')
     ivf_treatment = SelectField('Supernumerary embryos from IVF treatment?',
-                                choices=[('no', 'No'), ('yes', 'Yes')])
+                                choices=[('no', 'No'), ('yes', 'Yes')],
+                                validators=[optional()])
     pgd_embryo = SelectField('PGD Embryo?',
-                             choices=[('no', 'No'), ('yes', 'Yes')])
+                             choices=[('no', 'No'), ('yes', 'Yes')],
+                             validators=[optional()])
     zp_removal_technique = StringField('ZP removal technique')
     cell_isolation = StringField('Cell isolation')
     cell_seeding = StringField('Cell seeding')
