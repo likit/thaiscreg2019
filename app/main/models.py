@@ -2,19 +2,31 @@ from ..app import db, ma
 from datetime import datetime
 from flask_login import UserMixin
 from sqlalchemy.dialects.postgresql.json import JSONB
+from werkzeug.security import generate_password_hash, check_password_hash
 
 
 class User(db.Model, UserMixin):
     __tablename__ = 'main_users'
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
     email = db.Column('email', db.String(255), nullable=False)
-    password = db.Column('password', db.String(255), nullable=False)
+    password_hash = db.Column('password', db.String(255), nullable=False)
     activated = db.Column('activated', db.Boolean(), default=False)
     activated_at = db.Column('activated_at', db.DateTime(timezone=True))
     signup_at = db.Column('signup_at', db.DateTime(timezone=True), default=datetime.utcnow())
 
     def __str__(self):
         return self.email
+
+    @property
+    def password(self):
+        raise AttributeError('Password is not a readable attribute')
+
+    @password.setter
+    def password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    def verify_password(self, password):
+        return check_password_hash(self.password_hash, password)
 
 
 class UserProfile(db.Model):

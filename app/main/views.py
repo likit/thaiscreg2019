@@ -3,11 +3,12 @@ from flask import render_template, redirect, request, url_for
 from . import mainbp as main
 from .forms import SignUpForm, LogInForm, ProfileForm, RegisterCellForm, RegisterProjectForm
 from collections import defaultdict
-from .models import User, Project, Event, Cell, ApprovalStatus, Institution
+from .models import User, Project, Event, Cell, ApprovalStatus, Institution, UserProfile
 from .models import InstitutionSchema
 from ..app import db
 from flask_login import login_user, current_user, logout_user, login_required
 from json import loads
+from werkzeug.security import generate_password_hash
 
 
 @main.route('/', methods=['GET', 'POST'])
@@ -21,6 +22,8 @@ def index():
         else:
             new_user = User(email=form.email.data,
                             password=form.password1.data)
+            profile = UserProfile(public_email=form.email.data)
+            new_user.profile = profile
             db.session.add(new_user)
             db.session.commit()
             login_user(new_user)
@@ -56,7 +59,7 @@ def log_user_in():
         user = User.query.filter_by(email=email).first()
         if user:
             pw = request.form.get('password')
-            if pw == user.password:
+            if user.verify_password(pw):
                 login_user(user, remember=True)
                 return redirect('/')
             else:
@@ -85,14 +88,15 @@ def account_dash():
     projects = {'pending': 0, 'approved': 0, 'total': 0}
     affil_researchers = []
     affil_projects = {'pending': 0, 'approved': 0, 'total': 0}
-    for researcher in current_user.profile.affil.affiliates:
-        for proj in researcher.user.created_projects:
-            if proj.status.status == 'pending':
-                affil_projects['pending'] += 1
-            elif proj.status.status == 'approved':
-                affil_projects['approved'] += 1
-        affil_projects['total'] += 1
-        affil_researchers.append(researcher)
+    if current_user.profile.affil is not None:
+        for researcher in current_user.profile.affil.affiliates:
+            for proj in researcher.user.created_projects:
+                if proj.status.status == 'pending':
+                    affil_projects['pending'] += 1
+                elif proj.status.status == 'approved':
+                    affil_projects['approved'] += 1
+            affil_projects['total'] += 1
+            affil_researchers.append(researcher)
 
     for proj in current_user.created_projects:
         if proj.status.status == 'pending':
@@ -185,9 +189,24 @@ def display_project_info(project_id):
 def edit_profile():
     msg = None
     error_msg = {}
+    institutions = Institution.query.all()
+    institution_schema = InstitutionSchema(many=True)
     pf = current_user.profile
     form = ProfileForm()
     if form.validate_on_submit():
+        if pf.affil is None:
+            institution_name_th = request.form.get('hidden_institution')
+            existing_institution = Institution.query.filter_by(name_th=institution_name_th).first()
+            if existing_institution:
+                pf.affil = existing_institution
+            else:
+                new_institution = Institution(name_th=institution_name_th,
+                                              campus=request.form.get('hidden_campus', ''),
+                                              adder=current_user,
+                                              name_en=request.form.get('hidden_name_en', ''))
+                pf.affil = new_institution
+                db.session.add(new_institution)
+                db.session.commit()
         pf.public_email = form.public_email.data
         pf.academic_title_th = form.academic_title_th.data
         pf.title_th = form.title_th.data
@@ -217,7 +236,8 @@ def edit_profile():
 
     return render_template('main/edit_profile.html', form=form,
                            message=msg, error_msg=error_msg,
-                           page_name='profile')
+                           page_name='profile',
+                           institutions=institution_schema.dump(institutions).data)
 
 
 @main.route('/account/cells', methods=['GET', 'POST'])
