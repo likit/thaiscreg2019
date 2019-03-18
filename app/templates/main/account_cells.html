@@ -74,6 +74,26 @@
                                                 </span>&nbsp;<% props.row.submitter_email %>
                                         </small>
                                     </p>
+                                    <p>
+                                        <div class="field is-grouped is-grouped-multiline">
+                                            <div class="control">
+                                                <div class="tags has-addons">
+                                                    <span class="tag is-dark">status</span>
+                                                    <span class="tag is-info">
+                                                        <% props.row.status %>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </p>
+                                    <p>
+                                        <small>
+                                            Last update is <% props.row.update_datetime %>
+                                        </small>
+                                        <small>
+                                            <a class="has-text-link">View detail..</a>
+                                        </small>
+                                    </p>
                                 </div>
                             </div>
                         </article>
@@ -100,7 +120,7 @@
                     this.$refs.table.toggleDetails(row)
                 },
                 goto(row) {
-                    window.open("/account/cell/view/" + row.id)
+                    window.open("/cell/" + row.id)
                 }
             }
         });
