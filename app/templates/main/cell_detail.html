@@ -1,0 +1,429 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <section class="hero is-info is-bold is-small">
+        <div class="hero-head">
+            <nav class="navbar">
+                <div class="container">
+                    <div class="navbar-brand">
+                        <a role="button" class="navbar-burger burger" aria-label="menu"
+                           aria-expanded="false" data-target="navbarBasicExample">
+                            <span aria-hidden="true"></span>
+                            <span aria-hidden="true"></span>
+                            <span aria-hidden="true"></span>
+                        </a>
+                    </div>
+                    <div id="navbarBasicExample" class="navbar-menu">
+                        <div class="navbar-end">
+                            <a class="navbar-item" href="/">
+                                Home
+                            </a>
+                            <a class="navbar-item">
+                                Cells
+                            </a>
+                            <a class="navbar-item is-active"
+                               href="{{ url_for('main.show_projects') }}">
+                                Projects
+                            </a>
+                            <a class="navbar-item">
+                                Researchers
+                            </a>
+                            <a class="navbar-item">
+                                About
+                            </a>
+                            {% if current_user.is_authenticated %}
+                                <div class="navbar-item" >
+                                    <div class="buttons">
+                                        <a class="button is-rounded is-light"
+                                           href="{{ url_for('main.account_dash') }}">
+                                            <span class="icon">
+                                                <i class="fas fa-user-circle"></i>
+                                            </span>&nbsp;
+                                            Account
+                                        </a>
+                                        <a class="button is-light is-rounded"
+                                           href="{{ url_for('main.log_user_out') }}">
+                                            <span class="icon">
+                                               <i class="fas fa-power-off"></i>
+                                            </span>
+                                        </a>
+                                    </div>
+                                </div>
+                            {% else %}
+                                <div class="navbar-item">
+                                    <a class="button is-link is-rounded"
+                                       href="{{ url_for('main.log_user_in') }}">
+                                        Log In
+                                    </a>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </div>
+        <div class="hero-body">
+            <div class="container has-text-centered">
+                <div class="columns">
+                    <div class="column">
+                        <img src="{{ url_for('static', filename='img/network.png') }}" width="100">
+                        <h1 class="title">Cell Line Detail</h1>
+                        <h1 class="subtitle">ID {{ cell.id }}</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column has-text-right">
+                    <a class="button is-link is-rounded"
+                       href="{{ url_for('main.register_cell') }}"
+                    >
+                        <span class="icon">
+                            <i class="fas fa-plus"></i>
+                        </span>&nbsp;
+                        Register Cell Line
+                    </a>
+                </div>
+            </div>
+            <h1 class="title has-text-info">General</h1>
+            <div class="columns">
+                <div class="column">
+                    <div class="card">
+                        <div class="card-header">
+                            <p class="card-header-title">Cell Line</p>
+                        </div>
+                        <div class="card-content">
+                            <table class="table is-fullwidth is-striped">
+                                <col width="40%">
+                                <tr>
+                                    <td>ID</td>
+                                    <td>{{ cell.id }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Cell Type</td>
+                                    <td>{{ cell.cell_type }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Alternative names</td>
+                                    <td>{{ cell.alt_names }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Last update</td>
+                                    <td>{{ cell.update_datetime|shortdatetime }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Availability</td>
+                                    <td>{{ cell.data.get('availability') }}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br><h1 class="title has-text-info">Donor Information</h1>
+            <div class="columns">
+                <div class="column">
+                    <div class="card">
+                        <div class="card-header">
+                            <p class="card-header-title">General</p>
+                        </div>
+                        <div class="card-content">
+                            <table class="table is-fullwidth is-striped">
+                                <col width="40%">
+                                <tr>
+                                    <td>Sex</td>
+                                    <td>{{ cell.data.get('donor').get('sex', '').title() }}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <p class="card-header-title">Phenotypes and Disease Related Information</p>
+                        </div>
+                        <div class="card-content">
+                            <table class="table is-fullwidth is-striped">
+                                <col width="40%">
+                                <tr>
+                                    <td>Diseases</td>
+                                    <td>{{ cell.data.get('donor').get('diseases', '').title() }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Diseases-associated phenotypes</td>
+                                    <td>{{ cell.data.get('donor').get('disease_associated_phenotypes', '').title() }}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <p class="card-header-title">Karyotyping</p>
+                        </div>
+                        <div class="card-content">
+                            <table class="table is-fullwidth is-striped">
+                                <col width="40%">
+                                <tr>
+                                    <td>Has the donor karyotype has been analyzed?</td>
+                                    <td>
+                                        <span class="icon">
+                                        {% if cell.data.get('donor').get('karyotyped', '') == 'no' %}
+                                            <i class="fas fa-times has-text-danger"></i>
+                                        {% else %}
+                                            <i class="fas fa-check has-text-success"></i>
+                                        {% endif %}
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Is the genome-wide genotyping or functional data available?</td>
+                                    <td>
+                                        <span class="icon">
+                                        {% if cell.data.get('donor').get('genome_wide_study', '') == 'no' %}
+                                            <i class="fas fa-times has-text-danger"></i>
+                                        {% else %}
+                                            <i class="fas fa-check has-text-success"></i>
+                                        {% endif %}
+                                        </span>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br><h1 class="title has-text-info">Culture Conditions</h1>
+            <div class="columns">
+                <div class="column">
+                    <div class="card">
+                        <div class="card-content">
+                            <table class="table is-fullwidth is-striped">
+                                <col width="40%">
+                                <tr>
+                                    <td>Surface coating</td>
+                                    <td>{{ cell.data.get('culture').get('surface_coating', '').title() }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Feeder cells</td>
+                                    <td>
+                                        <span class="icon">
+                                        {% if cell.data.get('culture').get('feeder_cells', '') == 'no' %}
+                                            <i class="fas fa-times has-text-danger"></i>
+                                        {% else %}
+                                            <i class="fas fa-check has-text-success"></i>
+                                        {% endif %}
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Passage method</td>
+                                    <td>{{ cell.data.get('culture').get('passage_method', '').title() }}</td>
+                                </tr>
+                                <tr>
+                                    <td>CO2 concentration</td>
+                                    <td>{{ cell.data.get('culture').get('co2_conc', '') }}</td>
+                                </tr>
+                                <tr>
+                                    <td>O2 concentration</td>
+                                    <td>{{ cell.data.get('culture').get('o2_conc', '') }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Medium</td>
+                                    <td>{{ cell.data.get('culture').get('medium', '') }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Has Rock inhibitor (Y27632) been used at passage previously with this cell line?</td>
+                                    <td>
+                                        <span class="icon">
+                                        {% if cell.data.get('culture').get('rock_inhibitor_passage', '') == 'no' %}
+                                            <i class="fas fa-times has-text-danger"></i>
+                                        {% else %}
+                                            <i class="fas fa-check has-text-success"></i>
+                                        {% endif %}
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Has Rock inhibitor (Y27632) been used at cryo previously with this cell line?</td>
+                                    <td>
+                                        <span class="icon">
+                                        {% if cell.data.get('culture').get('rock_inhibitor_cryo', '') == 'no' %}
+                                            <i class="fas fa-times has-text-danger"></i>
+                                        {% else %}
+                                            <i class="fas fa-check has-text-success"></i>
+                                        {% endif %}
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Has Rock inhibitor (Y27632) been used at thaw previously with this cell line?</td>
+                                    <td>
+                                        <span class="icon">
+                                        {% if cell.data.get('culture').get('rock_inhibitor_thaw', '') == 'no' %}
+                                            <i class="fas fa-times has-text-danger"></i>
+                                        {% else %}
+                                            <i class="fas fa-check has-text-success"></i>
+                                        {% endif %}
+                                        </span>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br><h1 class="title has-text-info">Characterization</h1>
+            <div class="columns">
+                <div class="column">
+                    <div class="card">
+                        <div class="card-content">
+                            <table class="table is-fullwidth is-striped">
+                                <th>Marker name</th>
+                                <th>Expressed</th>
+                                <th>Immunostaining</th>
+                                <th>RT-PCR</th>
+                                <th>FACTS</th>
+                                <th>Enzymatic assay</th>
+                                <th>Expression profiles</th>
+                                {% for marker in cell.data.get('characterization', {}).get('markers', {}) %}
+                                <tr>
+                                    <td>{{ marker.get('name', '').title() }}</td>
+                                    <td>
+                                        <span class="icon">
+                                        {% if marker.get('expressed', '') == 'no' %}
+                                            <i class="fas fa-times has-text-danger"></i>
+                                        {% elif marker.get('expressed', '') == 'yes' %}
+                                            <i class="fas fa-check has-text-success"></i>
+                                        {% endif %}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="icon">
+                                        {% if marker.get('immunostaining', '') == 'no' %}
+                                            <i class="fas fa-times has-text-danger"></i>
+                                        {% elif marker.get('immunostaining', '') == 'yes' %}
+                                            <i class="fas fa-check has-text-success"></i>
+                                        {% endif %}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="icon">
+                                        {% if marker.get('rtpcr', '') == 'no' %}
+                                            <i class="fas fa-times has-text-danger"></i>
+                                        {% elif marker.get('rtpcr', '') == 'yes' %}
+                                            <i class="fas fa-check has-text-success"></i>
+                                        {% endif %}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="icon">
+                                        {% if marker.get('facts', '') == 'no' %}
+                                            <i class="fas fa-times has-text-danger"></i>
+                                        {% elif marker.get('facts', '') == 'yes' %}
+                                            <i class="fas fa-check has-text-success"></i>
+                                        {% endif %}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="icon">
+                                        {% if marker.get('enzyme', '') == 'no' %}
+                                            <i class="fas fa-times has-text-danger"></i>
+                                        {% elif marker.get('enzyme', '') == 'yes' %}
+                                            <i class="fas fa-check has-text-success"></i>
+                                        {% endif %}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="icon">
+                                        {% if marker.get('profiles', '') == 'no' %}
+                                            <i class="fas fa-times has-text-danger"></i>
+                                        {% elif marker.get('profiles', '') == 'yes' %}
+                                            <i class="fas fa-check has-text-success"></i>
+                                        {% endif %}
+                                        </span>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </table>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <p class="card-header-title">Differentiation Potency</p>
+                        </div>
+                        <div class="card-content">
+                            <table class="table is-fullwidth is-striped">
+                                <col width="40%">
+                                <tr>
+                                    <td>Endoderm</td>
+                                    <td>{{ cell.data.get('characterization', {}).get('endoderm', '') }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Ectoderm</td>
+                                    <td>{{ cell.data.get('characterization', {}).get('ectoderm', '') }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Mesoderm</td>
+                                    <td>{{ cell.data.get('characterization', {}).get('mesoderm', '') }}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br><h1 class="title has-text-info">Genotyping</h1>
+            <div class="columns">
+                <div class="column">
+                    <div class="card">
+                        <div class="card-content">
+                        <table class="table is-striped is-fullwidth">
+                            <col width="40%">
+                            <tr>
+                                <td>Has the cell line been karyotyped?</td>
+                                <td>
+                                        <span class="icon">
+                                        {% if cell.data.get('genotyping', {}).get('karyotyped', '') == 'no' %}
+                                            <i class="fas fa-times has-text-danger"></i>
+                                        {% elif cell.data.get('genotyping', {}).get('karyotyped', '') == 'yes' %}
+                                            <i class="fas fa-check has-text-success"></i>
+                                        {% endif %}
+                                        </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Karyotype</td>
+                                <td>
+                                    {{ cell.data.get('genotype', {}).get('karyotype') }}
+                                </td>
+                            </tr>
+                        </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+{% block scripts %}
+    {{ super() }}
+    <script>
+        var vueApp = new Vue({
+            el: '#app',
+            delimiters: ['<%', '%>'],
+            data() {
+                return {
+                }
+            },
+            methods: {
+                toggle(row) {
+                    this.$refs.table.toggleDetails(row)
+                },
+                goto(row) {
+                    window.open("/account/project/view/" + row.id)
+                }
+            }
+        });
+    </script>
+{% endblock %}

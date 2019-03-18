@@ -95,6 +95,7 @@ class Cell(db.Model):
     update_datetime = db.Column('update_datetime', db.DateTime(timezone=True))
     data = db.Column('data', JSONB)
     view_count = db.Column('view_count', db.Integer(), default=0)
+    last_view = db.Column('last_view', db.DateTime(timezone=True))
 
 
 

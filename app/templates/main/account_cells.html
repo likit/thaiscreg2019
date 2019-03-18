@@ -54,7 +54,7 @@
                             <% props.row.status %>
                         </b-table-column>
                         <b-table-column field="view" label="View">
-                            <a @click="goto(props.row)">
+                            <a v-bind:href="'/cell/'+props.row.id">
                                         <span class="icon">
                                             <i class="far fa-eye"></i>
                                         </span>
@@ -84,14 +84,25 @@
                                                     </span>
                                                 </div>
                                             </div>
+                                            <div class="control">
+                                                <small>
+                                                    <a class="has-text-link"
+                                                       v-bind:href="'/cell/' + props.row.id"
+                                                    >View detail..</a>
+                                                </small>
+                                            </div>
                                         </div>
-                                    </p>
-                                    <p>
+                                        <span class="icon">
+                                            <i class="fas fa-pencil-alt"></i>
+                                        </span>
                                         <small>
-                                            Last update is <% props.row.update_datetime %>
+                                            <% props.row.update_datetime %>
                                         </small>
+                                        <span class="icon">
+                                            <i class="far fa-eye"></i>
+                                        </span>
                                         <small>
-                                            <a class="has-text-link">View detail..</a>
+                                            <% props.row.last_view %>
                                         </small>
                                     </p>
                                 </div>

@@ -37,6 +37,7 @@ admin.add_views(ModelView(User, db.session, category='users'))
 admin.add_views(ModelView(UserProfile, db.session, category='users'))
 admin.add_views(ModelView(Project, db.session, category='cells & projects'))
 admin.add_views(ModelView(ApprovalStatus, db.session, category='cells & projects'))
+admin.add_views(ModelView(Cell, db.session, category='cells & projects'))
 admin.add_views(ModelView(Institution, db.session, category='institutions'))
 admin.add_views(ModelView(Event, db.session, category='events'))
 

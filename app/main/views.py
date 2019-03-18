@@ -231,6 +231,7 @@ def account_cells():
             'status': c.status.status,
             'register_datetime': c.register_datetime,
             'update_datetime': c.update_datetime,
+            'last_view': c.last_view,
             'data': c.data,
             'view_count': c.view_count or 0,
         })
@@ -257,6 +258,7 @@ def register_cell():
         data = {
             'alt_names': form.alternative_names.data,
             'comment': form.comment.data,
+            'availability': form.available.data,
             'donor': {
                 'sex': form.donor_gender.data,
                 'karyotyped': form.donor_karyotyped.data,
@@ -277,9 +279,9 @@ def register_cell():
             },
             'characterization': {
                 'markers': markers,
-                '': form.diff_potency_endoderm.data,
-                '': form.diff_potency_ectoderm.data,
-                '': form.diff_potency_mesoderm.data,
+                'endoderm_potency': form.diff_potency_endoderm.data,
+                'ectoderm_potency': form.diff_potency_ectoderm.data,
+                'mesoderm_potency': form.diff_potency_mesoderm.data,
             },
             'genotyping': {
                 'karyotyped': form.karyotyped.data,
@@ -331,6 +333,17 @@ def register_cell():
                 print(field, error)
 
     return render_template('main/register_cell.html', form=form)
+
+
+@main.route('/cell/<int:cell_id>', methods=['GET', 'POST'])
+def display_cell_info(cell_id=None):
+    if cell_id:
+        cell = Cell.query.get(cell_id)
+        cell.view_count += 1
+        cell.last_view = datetime.utcnow()
+        db.session.add(cell)
+        db.session.commit()
+        return render_template('main/cell_detail.html', cell=cell)
 
 
 @main.route('/project/register', methods=['GET', 'POST'])
