@@ -452,6 +452,7 @@ def register_project():
 def show_cell_list():
     cell_type = request.args.get('cell-type', 'all')
     cells = []
+    filtered_cells = []
     for c in Cell.query.all():
         cells.append({
             'id': c.id,
