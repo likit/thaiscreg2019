@@ -131,3 +131,8 @@ class Event(db.Model):
 class InstitutionSchema(ma.ModelSchema):
     class Meta:
         model = Institution
+
+
+class CellSchema(ma.ModelSchema):
+    class Meta:
+        model = Cell

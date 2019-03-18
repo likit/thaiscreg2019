@@ -4,7 +4,7 @@ from . import mainbp as main
 from .forms import SignUpForm, LogInForm, ProfileForm, RegisterCellForm, RegisterProjectForm
 from collections import defaultdict
 from .models import User, Project, Event, Cell, ApprovalStatus, Institution, UserProfile
-from .models import InstitutionSchema
+from .models import InstitutionSchema, CellSchema
 from ..app import db
 from flask_login import login_user, current_user, logout_user, login_required
 from json import loads
@@ -26,8 +26,8 @@ def index():
             new_user.profile = profile
             db.session.add(new_user)
             db.session.commit()
-            login_user(new_user)
-            return '{} has been logged in.'.format(current_user.email)
+            login_user(new_user, remember=True)
+            return redirect(url_for('main.edit_profile'))
     else:
         for field, errors in form.errors.items():
             for error in errors:
@@ -61,7 +61,7 @@ def log_user_in():
             pw = request.form.get('password')
             if user.verify_password(pw):
                 login_user(user, remember=True)
-                return redirect('/')
+                return redirect(request.args.get('next', url_for('main.account_dash')))
             else:
                 error_msg = 'Password is not correct.'
         else:
@@ -117,6 +117,12 @@ def account_projects():
     status_filter = request.args.get('status_filter', None)
     projects = []
     for proj in current_user.created_projects:
+        if not proj.cell:
+            cell_id = None
+            cell_type = None
+        else:
+            cell_id = proj.cell.id
+            cell_type = proj.cell.cell_type
         projects.append({
             'id': proj.id,
             'title': proj.title,
@@ -130,7 +136,10 @@ def account_projects():
                 'lastname': proj.creator.profile.last_name_th,
                 'affil': proj.creator.profile.affil.name_th,
             },
-            'summary': proj.summary[:300]
+            'view_count': proj.view_count,
+            'summary': proj.summary[:300],
+            'cell_id': cell_id,
+            'cell_type': cell_type
         })
 
     if status_filter is None or status_filter == 'all':
@@ -150,20 +159,29 @@ def show_projects():
     query = request.args.get('q', None)
     projects = []
     for proj in Project.query.all():
+        if not proj.cell:
+            cell_id = None
+            cell_type = None
+        else:
+            cell_id = proj.cell.id
+            cell_type = proj.cell.cell_type
         projects.append({
             'id': proj.id,
             'title': proj.title,
             'affil': proj.institution.name_th,
             'startdate': proj.startdate,
             'enddate': proj.enddate,
-            'status': proj.status.status,
+            'status': proj.status.status.title(),
             'creator': {
                 'email': proj.creator.email,
                 'firstname': proj.creator.profile.first_name_th,
                 'lastname': proj.creator.profile.last_name_th,
                 'affil': proj.creator.profile.affil.name_th,
             },
-            'summary': proj.summary[:300]
+            'view_count': proj.view_count,
+            'summary': proj.summary[:300],
+            'cell_id': cell_id,
+            'cell_type': cell_type
         })
 
     if query:
@@ -181,6 +199,10 @@ def show_projects():
 @main.route('/project/<int:project_id>')
 def display_project_info(project_id):
     project = Project.query.get(project_id)
+    project.view_count += 1
+    project.last_view = datetime.utcnow()
+    db.session.add(project)
+    db.session.commit()
     return render_template('main/project_detail.html', project=project)
 
 
@@ -274,6 +296,9 @@ def account_cells():
 @login_required
 def register_cell():
     form = RegisterCellForm()
+    if not current_user.profile.affil:
+        return redirect(url_for('main.edit_profile'))
+
     institutions = [(str(current_user.profile.affil.id),
                      current_user.profile.affil.name_th)]
     form.institution.choices = institutions
@@ -381,14 +406,46 @@ def display_cell_info(cell_id=None):
 def register_project():
     institution_schema = InstitutionSchema(many=True)
     form = RegisterProjectForm()
+    cells = Cell.query.all()
+    cell_schema = CellSchema(many=True)
     institutions = Institution.query.all()
     if form.validate_on_submit():
-        print(request.form.get('hidden_startdate'), request.form.get('hidden_enddate'))
+        pending = ApprovalStatus.query.filter_by(status='pending').first()
+        the_institution = Institution.query.filter_by(name_th=request.form.get('hidden_institution', '')).first()
+        if not the_institution:
+            new_institution = Institution(
+                name_th=request.form.get('hidden_institution'),
+                name_en='',
+                adder=current_user,
+                campus='',
+            )
+            the_institution = new_institution
+
+        the_cell = Cell.query.get(int(request.form.get('hidden_cell')))
+        new_project = Project(
+            title=form.title.data,
+            acronym=form.acronym.data,
+            summary=form.summary.data,
+            website=form.website.data,
+            sponsor_name=form.sponsor_name.data,
+            institution=the_institution,
+            creator=current_user,
+            status=pending,
+            startdate=request.form.get('hidden_startdate', ''),
+            enddate=request.form.get('hidden_enddate', ''),
+            cell=the_cell,
+        )
+        db.session.add(new_project)
+        db.session.commit()
+        return redirect(url_for('main.account_dash'))
     else:
-        print(request.form.get('hidden_institution'))
+        for field, errors in form.errors.items():
+            for error in errors:
+                print(error)
     return render_template('main/register_project.html',
-                            form=form,
-                            institutions=institution_schema.dump(institutions).data)
+                           form=form,
+                           cells=cell_schema.dump(cells).data,
+                           institutions=institution_schema.dump(institutions).data)
 
 
 @main.route('/cells', methods=['GET', 'POST'])

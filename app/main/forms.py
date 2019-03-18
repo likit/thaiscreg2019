@@ -124,10 +124,10 @@ class RegisterCellForm(FlaskForm):
 class RegisterProjectForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired()])
     acronym = StringField('acronym')
-    summary = StringField('summary')
+    summary = StringField('summary', widget=TextArea())
     website = StringField('website')
-    startdate = DateField('Start Date', validators=[DataRequired()])
-    enddate = DateField('End Date', validators=[DataRequired()])
+    startdate = DateField('Start Date', validators=[optional()])
+    enddate = DateField('End Date', validators=[optional()])
     sponsor_name = StringField('Sponsor Name')
     institution = StringField('Institution Name')
     submit = SubmitField('Submit')

@@ -57,7 +57,7 @@
                                         <span class="icon">
                                             <i class="far fa-eye"></i>
                                         </span>
-                                        <span class="tag">4</span>
+                                        <span class="tag"><% props.row.view_count %></span>
                                     </a>
                                 </b-table-column>
                             </template>
@@ -77,10 +77,24 @@
                                                     </span>&nbsp;<% props.row.creator.affil %>
                                                 </small>
                                                 <br>
-                                                <span class="tag is-link is-normal">ASC001-30</span>
-                                                <span class="tag is-link is-normal">ASC001-30</span>
+                                                <div class="field is-grouped is-grouped-multiline">
+                                                    <div class="control">
+                                                        <a v-bind:href="'/cell/'+props.row.cell_id">
+                                                            <div class="tags has-addons">
+                                                                <span class="tag is-dark"><% props.row.cell_type %></span>
+                                                                <span class="tag is-info">
+                                                                <strong>THSCR-<% props.row.cell_id %></strong>
+                                                            </span>
+                                                            </div>
+                                                        </a>
+                                                    </div>
+                                                </div>
                                                 <br>
                                                 <small><% props.row.summary %>...</small>
+                                                <a v-bind:href="'/project/'+props.row.id"
+                                                   class="button is-link is-small is-rounded">
+                                                    See detail
+                                                </a>
                                             </p>
                                         </div>
                                     </div>
@@ -107,9 +121,6 @@
                 toggle(row) {
                     this.$refs.table.toggleDetails(row)
                 },
-                goto(row) {
-                    window.open("/account/project/view/" + row.id)
-                }
             }
         });
     </script>

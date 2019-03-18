@@ -63,9 +63,9 @@
         </div>
         <div class="hero-body">
             <div class="container">
-                <p><h1 class="title">{{ current_user.profile.academic_title_th }} {{ current_user.profile.first_name_th }} {{ current_user.profile.last_name_th }}</h1>
-                <h1 class="subtitle">{{ current_user.profile.first_name_en }} {{ current_user.profile.last_name_en }}</h1></p>
-                <p><h1 class="subtitle">สังกัด {{ current_user.profile.affil.name_th }} วิทยาเขต {{ current_user.profile.affil.campus }}</h1></p>
+                <p><h1 class="title">{{ current_user.profile.academic_title_th or '' }} {{ current_user.profile.first_name_th or '' }} {{ current_user.profile.last_name_th or '' }}</h1>
+                <h1 class="subtitle">{{ current_user.profile.first_name_en or '' }} {{ current_user.profile.last_name_en or ''}}</h1></p>
+                <p><h1 class="subtitle">สังกัด {{ current_user.profile.affil.name_th or '-' }} วิทยาเขต {{ current_user.profile.affil.campus or '-'}}</h1></p>
             </div>
         </div>
         <div class="hero-foot">

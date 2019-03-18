@@ -41,13 +41,13 @@
                                 <div class="control is-expanded">
                                     {{ form.title_th(class="input", placeholder="Title") }}
                                 </div>
-                                <p class="help is-link">e.g. นาย, น.ส., ดร.</p>
+                                <p class="help is-info">e.g. นาย, น.ส., ดร.</p>
                             </div>
                             <div class="field">
                                 <div class="control is-expanded">
                                     {{ form.academic_title_th(class="input", placeholder="Academic Title") }}
                                 </div>
-                                <p class="help is-link">e.g. ผ.ศ., ร.ศ.</p>
+                                <p class="help is-info">e.g. ผ.ศ., ร.ศ.</p>
                             </div>
                         </div>
                     </div>
@@ -114,55 +114,58 @@
                                 <div class="control is-expanded">
                                     {{ form.street(class="textarea", placeholder="Street Address") }}
                                 </div>
-                                <p class="help is-link">e.g. ที่อยู่ห้องทำงานหรือสำนักงาน</p>
+                                <p class="help is-info">e.g. ที่อยู่ห้องทำงานหรือสำนักงาน</p>
                             </div>
                         </div>
                     </div>
                     {% if not current_user.profile.affil %}
-                    <b-field horizontal label="Institution">
-                        <b-autocomplete
-                                v-model="institutionName"
-                                placeholder="ชื่อสถาบัน"
-                                :data="filteredInstitutions"
-                                field="name_th"
-                                @select="option => selected = option"
-                                name="hidden_institution">
+                    <div class="notification is-light">
+                        <b-field horizontal label="Institution"type="is-danger"
+                            message="ท่านไม่สามารถลงทะเบียนเซลล์หรือโปรเจคได้ จนกว่าจะระบุสถาบันต้นสังกัด">
+                            <b-autocomplete
+                                    v-model="institutionName"
+                                    placeholder="ค้นหาด้วยชื่อสถาบันภาษาไทย หรือพิมพ์ชื่อและกรอกข้อมูลเพื่อเพิ่มรายการ"
+                                    :data="filteredInstitutions"
+                                    field="name_th"
+                                    @select="option => selected = option"
+                                    name="hidden_institution">
 
-                            <template slot-scope="props">
-                                <div class="media">
-                                    <div class="media-content">
-                                        <strong><% props.option.name_th %></strong>
-                                        <small>
-                                            <% props.option.name_en %>
-                                        </small>
-                                        <p>
-                                            Campus <strong><% props.option.campus %></strong>
-                                        </p>
+                                <template slot-scope="props">
+                                    <div class="media">
+                                        <div class="media-content">
+                                            <strong><% props.option.name_th %></strong>
+                                            <small>
+                                                <% props.option.name_en %>
+                                            </small>
+                                            <p>
+                                                Campus <strong><% props.option.campus %></strong>
+                                            </p>
+                                        </div>
                                     </div>
-                                </div>
-                            </template>
-                        </b-autocomplete>
-                    </b-field>
-                    <div class="field is-horizontal" v-if="!selected">
-                        <div class="field-label is-normal">
-                            <label>English Name</label>
-                        </div>
-                        <div class="field-body">
-                            <div class="field">
-                                <div class="control is-expanded">
-                                    <input type="text" class="input" name="hidden_name_en">
+                                </template>
+                            </b-autocomplete>
+                        </b-field>
+                        <div class="field is-horizontal" v-if="!selected">
+                            <div class="field-label is-normal">
+                                <label>English Name</label>
+                            </div>
+                            <div class="field-body">
+                                <div class="field">
+                                    <div class="control is-expanded">
+                                        <input type="text" class="input" name="hidden_name_en">
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="field is-horizontal" v-if="!selected">
-                        <div class="field-label is-normal">
-                            <label>Campus</label>
-                        </div>
-                        <div class="field-body">
-                            <div class="field">
-                                <div class="control is-expanded">
-                                    <input type="text" class="input" name="hidden_campus">
+                        <div class="field is-horizontal" v-if="!selected">
+                            <div class="field-label is-normal">
+                                <label>Campus</label>
+                            </div>
+                            <div class="field-body">
+                                <div class="field">
+                                    <div class="control is-expanded">
+                                        <input type="text" class="input" name="hidden_campus">
+                                    </div>
                                 </div>
                             </div>
                         </div>
