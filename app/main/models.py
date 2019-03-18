@@ -78,6 +78,9 @@ class Project(db.Model):
     status_id = db.Column('status_id', db.ForeignKey('main_approval_statuses.id'))
     status = db.relationship('ApprovalStatus')
     view_count = db.Column('view_count', db.Integer(), default=0)
+    last_view = db.Column('last_view', db.DateTime(timezone=True))
+    cell_id = db.Column('cell_id', db.ForeignKey('main_cells.id'))
+    cell = db.relationship('Cell', backref=db.backref('projects'))
 
 
 class Cell(db.Model):
