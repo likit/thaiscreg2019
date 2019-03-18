@@ -18,7 +18,8 @@
                             <a class="navbar-item" href="/">
                                 Home
                             </a>
-                            <a class="navbar-item">
+                            <a class="navbar-item"
+                                href="{{ url_for('main.show_cell_list') }}">
                                 Cells
                             </a>
                             <a class="navbar-item is-active"
@@ -68,7 +69,7 @@
                     <div class="column">
                         <img src="{{ url_for('static', filename='img/network.png') }}" width="100">
                         <h1 class="title">Cell Line Detail</h1>
-                        <h1 class="subtitle">ID {{ cell.id }}</h1>
+                        <h1 class="subtitle">ID THSCR-{{ cell.id }}</h1>
                     </div>
                 </div>
             </div>

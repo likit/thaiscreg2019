@@ -1,0 +1,200 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <section class="hero is-info is-bold is-small">
+        <div class="hero-head">
+            <nav class="navbar">
+                <div class="container">
+                    <div class="navbar-brand">
+                        <a role="button" class="navbar-burger burger" aria-label="menu"
+                           aria-expanded="false" data-target="navbarBasicExample">
+                            <span aria-hidden="true"></span>
+                            <span aria-hidden="true"></span>
+                            <span aria-hidden="true"></span>
+                        </a>
+                    </div>
+                    <div id="navbarBasicExample" class="navbar-menu">
+                        <div class="navbar-end">
+                            <a class="navbar-item" href="/">
+                                Home
+                            </a>
+                            <a class="navbar-item"
+                               href="{{ url_for('main.show_cell_list') }}">
+                                Cells
+                            </a>
+                            <a class="navbar-item is-active"
+                               href="{{ url_for('main.show_projects') }}">
+                                Projects
+                            </a>
+                            <a class="navbar-item">
+                                Researchers
+                            </a>
+                            <a class="navbar-item">
+                                About
+                            </a>
+                            {% if current_user.is_authenticated %}
+                                <div class="navbar-item" >
+                                    <div class="buttons">
+                                        <a class="button is-rounded is-light"
+                                           href="{{ url_for('main.account_dash') }}">
+                                            <span class="icon">
+                                                <i class="fas fa-user-circle"></i>
+                                            </span>&nbsp;
+                                            Account
+                                        </a>
+                                        <a class="button is-light is-rounded"
+                                           href="{{ url_for('main.log_user_out') }}">
+                                            <span class="icon">
+                                               <i class="fas fa-power-off"></i>
+                                            </span>
+                                        </a>
+                                    </div>
+                                </div>
+                            {% else %}
+                                <div class="navbar-item">
+                                    <a class="button is-link is-rounded"
+                                       href="{{ url_for('main.log_user_in') }}">
+                                        Log In
+                                    </a>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </div>
+        <div class="hero-body">
+            <div class="container has-text-centered">
+                <div class="columns">
+                    <div class="column">
+                        <img src="{{ url_for('static', filename='img/network.png') }}" width="100">
+                        <h1 class="title">Project Detail</h1>
+                        <h1 class="subtitle">Project ID : {{ project.id }}</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column has-text-right">
+                    <a class="button is-link is-rounded"
+                       href="{{ url_for('main.register_cell') }}"
+                    >
+                        <span class="icon">
+                            <i class="fas fa-plus"></i>
+                        </span>&nbsp;
+                        Register Project
+                    </a>
+                </div>
+            </div>
+            <h1 class="title has-text-info">General</h1>
+            <div class="columns">
+                <div class="column">
+                    <div class="card">
+                        <div class="card-header">
+                            <p class="card-header-title">Project</p>
+                        </div>
+                        <div class="card-content">
+                            <table class="table is-fullwidth is-striped">
+                                <col width="40%">
+                                <tr>
+                                    <td><strong>ID</strong></td>
+                                    <td>{{ project.id }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Title</strong></td>
+                                    <td>{{ project.title|title }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Acronym(s)</strong></td>
+                                    <td>{{ project.acronym }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Summary</strong></td>
+                                    <td>{{ project.summary }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Website</strong></td>
+                                    <td>{{ project.website }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Start Date</strong></td>
+                                    <td>{{ project.startdate|shortdate }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>End Date</strong></td>
+                                    <td>{{ project.enddate|shortdate }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Sponsor Name</strong></td>
+                                    <td>{{ project.sponsor_name}}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Institution</strong></td>
+                                    <td>
+                                        <table class="table">
+                                            <tr>
+                                                <td><strong>Thai Name</strong></td>
+                                                <td>{{ project.institution.name_th }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>English Name</strong></td>
+                                                <td>{{ project.institution.name_en }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Campus</strong></td>
+                                                <td>{{ project.institution.campus }}</td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Status</strong></td>
+                                    <td>{{ project.status.status|title }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Cell Line</strong></td>
+                                    <td>
+                                        <div class="control">
+                                            <a href="{{ url_for('main.display_cell_info', cell_id=project.cell.id) }}">
+                                                <div class="tags has-addons">
+                                                    <span class="tag is-dark">{{ project.cell.cell_type }}</span>
+                                                    <span class="tag is-success">
+                                                        <strong>THSCR-{{ project.cell.id }}</strong>
+                                                    </span>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+{% block scripts %}
+    {{ super() }}
+    <script>
+        var vueApp = new Vue({
+            el: '#app',
+            delimiters: ['<%', '%>'],
+            data() {
+                return {
+                }
+            },
+            methods: {
+                toggle(row) {
+                    this.$refs.table.toggleDetails(row)
+                },
+                goto(row) {
+                    window.open("/account/project/view/" + row.id)
+                }
+            }
+        });
+    </script>
+{% endblock %}

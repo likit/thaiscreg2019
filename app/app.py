@@ -49,14 +49,14 @@ def user_loader(user_id):
 def format_shortdate(value):
     if value is None:
         return ""
-    return value.strftime('%-d %b, %y')
+    return value.strftime('%-d %B %Y')
 
 
 @app.template_filter('shortdatetime')
 def format_shortdatetime(value):
     if value is None:
         return ""
-    return value.strftime('%-d %b, %y at %H:%m')
+    return value.strftime('%-d %B %Y at %H:%m')
 
 
 if __name__ == '__main__':

@@ -30,11 +30,13 @@ def index():
 
     projects = Project.query.all()[:3]
     events = Event.query.all()[:5]
+    cells = Cell.query.all()[:5]
 
     return render_template('main/index.html', form=form,
                            error_msg=error_msg,
                            projects=projects,
                            events=events,
+                           cells=cells,
                            )
 
 
@@ -168,6 +170,12 @@ def show_projects():
     return render_template('main/projects.html',
                            query=query,
                            projects=filtered_projects)
+
+
+@main.route('/project/<int:project_id>')
+def display_project_info(project_id):
+    project = Project.query.get(project_id)
+    return render_template('main/project_detail.html', project=project)
 
 
 @main.route('/account/profile/edit', methods=['POST', 'GET'])
@@ -351,3 +359,37 @@ def display_cell_info(cell_id=None):
 def register_project():
     form = RegisterProjectForm()
     return render_template('main/register_project.html', form=form)
+
+
+@main.route('/cells', methods=['GET', 'POST'])
+def show_cell_list():
+    cell_type = request.args.get('cell-type', 'all')
+    cells = []
+    for c in Cell.query.all():
+        cells.append({
+            'id': c.id,
+            'institution_id': c.institution.id,
+            'institution_name': c.institution.name_th,
+            'institution_campus': c.institution.campus,
+            'cell_type': c.cell_type,
+            'alt_names': c.data.get('alt_names', ''),
+            'submitted_by': u'{} {} ({} {})'.format(
+                c.user.profile.first_name_th,
+                c.user.profile.last_name_th,
+                c.user.profile.first_name_en,
+                c.user.profile.last_name_en),
+            'submitter_email': c.user.email,
+            'status': c.status.status,
+            'register_datetime': c.register_datetime,
+            'update_datetime': c.update_datetime,
+            'last_view': c.last_view,
+            'data': c.data,
+            'view_count': c.view_count or 0,
+        })
+        if cell_type != 'all':
+            filtered_cells = [c for c in cells if c['cell_type'] == cell_type]
+        else:
+            filtered_cells = cells
+    return render_template('main/cells.html',
+                           page_name='cell',
+                           cells=filtered_cells)

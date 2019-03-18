@@ -18,7 +18,7 @@
                             <a class="navbar-item is-active">
                                 Home
                             </a>
-                            <a class="navbar-item">
+                            <a class="navbar-item" href="{{ url_for('main.show_cell_list') }}">
                                 Cells
                             </a>
                             <a class="navbar-item" href="{{ url_for('main.show_projects') }}">
@@ -128,12 +128,16 @@
                                         {% endfor %}
                                     </div>
                                     <div class="has-text-centered">
-                                        {{ form.submit(class='button is-info') }}
+                                        {% if current_user.is_authenticated %}
+                                            {{ form.submit(class='button is-info', disabled=True) }}
+                                        {% else %}
+                                            {{ form.submit(class='button is-info') }}
+                                        {% endif %}
                                     </div>
                                 </form>
                             </div>
                             <footer class="card-footer">
-                                <a class="card-footer-item" href="{{ url_for('main.log_user_in') }}">Sign In</a>
+                                <a class="card-footer-item" href="{{ url_for('main.log_user_in') }}">Log In</a>
                                 <a class="card-footer-item">Forgot password?</a>
                             </footer>
                         </div>
@@ -141,9 +145,27 @@
                 </div>
                 <div class="columns">
                     <div class="column has-text-centered">
-                        <p class="subtitle">Last Validated Cell Lines</p>
-                        <span class="tag is-light is-normal">ASC001-30</span>
-                        <span class="tag is-light is-normal">ASC001-30</span>
+                        <p class="subtitle">Last Submitted Cell Lines</p>
+                        <div class="field is-grouped is-grouped-multiline is-grouped-centered">
+                        {% for cell in cells %}
+                                <div class="control">
+                                    <a href="{{ url_for('main.display_cell_info', cell_id=cell.id) }}">
+                                        <div class="tags has-addons">
+                                            <span class="tag is-dark">{{ cell.cell_type }}</span>
+                                            <span class="tag
+                                                {% if cell.status.status == 'approved' %}
+                                                is-success
+                                                {% else %}
+                                                is-warning
+                                                {% endif %}
+                                                ">
+                                                <strong>THSCR-{{ cell.id }}</strong>
+                                            </span>
+                                        </div>
+                                    </a>
+                                </div>
+                        {% endfor %}
+                        </div>
                     </div>
                 </div>
                 <div class="columns">
@@ -236,7 +258,13 @@
                         <article class="message">
                             <div class="message-header">
                                 {{ proj.title }} ({{ proj.acronym }})
-                                <span class="tag is-warning is-normal">{{ proj.status.status }}</span>
+                                <span class="tag
+                                    {% if proj.status.status == 'approved' %}
+                                        is-success
+                                    {% else %}
+                                        is-warning
+                                    {% endif %}
+                                ">{{ proj.status.status|title }}</span>
                             </div>
                             <div class="message-body">
                                 <p class="content">
@@ -245,8 +273,18 @@
                                         <small>More</small>
                                     </a>
                                     <br>
-                                    <span class="tag is-link is-normal">ASC001-30</span>
-                                    <span class="tag is-link is-normal">ASC001-30</span>
+                                    <div class="field is-grouped is-grouped-multiline">
+                                        <div class="control">
+                                            <a href="{{ url_for('main.display_cell_info', cell_id=proj.cell.id) }}">
+                                                <div class="tags has-addons">
+                                                    <span class="tag is-dark">{{ proj.cell.cell_type }}</span>
+                                                    <span class="tag is-success">
+                                                        <strong>THSCR-{{ proj.cell.id }}</strong>
+                                                    </span>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
                                 </p>
                             </div>
                         </article>
