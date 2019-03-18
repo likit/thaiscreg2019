@@ -3,10 +3,12 @@ from flask import render_template, redirect, request, url_for
 from . import mainbp as main
 from .forms import SignUpForm, LogInForm, ProfileForm, RegisterCellForm, RegisterProjectForm
 from collections import defaultdict
-from .models import User, Project, Event, Cell, ApprovalStatus
+from .models import User, Project, Event, Cell, ApprovalStatus, Institution
+from .models import InstitutionSchema
 from ..app import db
 from flask_login import login_user, current_user, logout_user, login_required
 from json import loads
+
 
 @main.route('/', methods=['GET', 'POST'])
 def index():
@@ -357,8 +359,16 @@ def display_cell_info(cell_id=None):
 @main.route('/project/register', methods=['GET', 'POST'])
 @login_required
 def register_project():
+    institution_schema = InstitutionSchema(many=True)
     form = RegisterProjectForm()
-    return render_template('main/register_project.html', form=form)
+    institutions = Institution.query.all()
+    if form.validate_on_submit():
+        print(request.form.get('hidden_startdate'), request.form.get('hidden_enddate'))
+    else:
+        print(request.form.get('hidden_institution'))
+    return render_template('main/register_project.html',
+                            form=form,
+                            institutions=institution_schema.dump(institutions).data)
 
 
 @main.route('/cells', methods=['GET', 'POST'])

@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <section class="hero is-info is-bold">
+    <section class="hero is-info is-bold is-small">
         <div class="hero-head">
             <nav class="navbar">
                 <div class="container">
@@ -21,7 +21,7 @@
                             {% if current_user.is_authenticated %}
                                 <div class="navbar-item">
                                     <div class="buttons">
-                                        <a class="button is-rounded is-link"
+                                        <a class="button is-rounded is-light"
                                            href="{{ url_for('main.account_dash') }}">
                                             <span class="icon">
                                                 <i class="fas fa-user-circle"></i>
@@ -53,7 +53,7 @@
             <div class="container has-text-centered">
                 <div class="columns">
                     <div class="column">
-                        <img src="{{ url_for('static', filename='img/network.png') }}" width="200">
+                        <img src="{{ url_for('static', filename='img/network.png') }}" width="100">
                         <h1 class="title">Register Project</h1>
                     </div>
                 </div>
@@ -85,6 +85,89 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="field is-horizontal">
+                                    <div class="field-label is-normal">
+                                        <label class="label">
+                                            {{ form.acronym.label }}
+                                        </label>
+                                    </div>
+                                    <div class="field-body">
+                                        <div class="field">
+                                            <p class="control is-expanded">
+                                                {{ form.acronym(class="input") }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="field is-horizontal">
+                                    <div class="field-label is-normal">
+                                        <label class="label">
+                                            {{ form.summary.label }}
+                                        </label>
+                                    </div>
+                                    <div class="field-body">
+                                        <div class="field">
+                                            <p class="control is-expanded">
+                                                {{ form.summary(class="textarea") }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="field is-horizontal">
+                                    <div class="field-label is-normal">
+                                        <label class="label">
+                                            {{ form.sponsor_name.label }}
+                                        </label>
+                                    </div>
+                                    <div class="field-body">
+                                        <div class="field">
+                                            <p class="control is-expanded">
+                                                {{ form.sponsor_name(class="input") }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <b-field horizontal label="Start Date">
+                                    <b-datepicker placeholder="Click to select.."
+                                                  icon="calendar-today"
+                                                  v-model="startDate"
+                                                  name="hidden_startdate"
+                                    >
+                                    </b-datepicker>
+                                </b-field>
+                                <b-field horizontal label="End Date">
+                                    <b-datepicker placeholder="Click to select.."
+                                        icon="calendar-today" v-model="endDate"
+                                                  name="hidden_enddate"
+                                    >
+                                    </b-datepicker>
+                                </b-field>
+                                <b-field horizontal label="Institution">
+                                    <b-autocomplete
+                                        v-model="institutionName"
+                                        placeholder="ชื่อสถาบัน"
+                                        :data="filteredInstitutions"
+                                        field="name_th"
+                                        @select="option => selected = option"
+                                        name="hidden_institution"
+                                    >
+
+                                        <template slot-scope="props">
+                                            <div class="media">
+                                                <div class="media-content">
+                                                    <strong><% props.option.name_th %></strong>
+                                                    <small>
+                                                        <% props.option.name_en %>
+                                                    </small>
+                                                    <p>
+                                                        Campus <strong><% props.option.campus %></strong>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </template>
+                                    >
+                                    </b-autocomplete>
+                                </b-field>
                             </div>
                         </div>
                     </div>
@@ -106,7 +189,18 @@
             delimiters: ['<%', '%>'],
             data() {
                 return {
-                    altNames: [],
+                    startDate: '',
+                    endDate: '',
+                    institutions: {{ institutions|tojson|safe }},
+                    selected: null,
+                    institutionName: '',
+                }
+            },
+            computed: {
+                filteredInstitutions() {
+                    return this.institutions.filter((option) => {
+                        return option.name_th.indexOf(this.institutionName) >= 0;
+                    })
                 }
             }
         });

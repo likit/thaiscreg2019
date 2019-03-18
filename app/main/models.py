@@ -1,4 +1,4 @@
-from ..app import db
+from ..app import db, ma
 from datetime import datetime
 from flask_login import UserMixin
 from sqlalchemy.dialects.postgresql.json import JSONB
@@ -101,7 +101,6 @@ class Cell(db.Model):
     last_view = db.Column('last_view', db.DateTime(timezone=True))
 
 
-
 class Event(db.Model):
     __tablename__ = 'main_events'
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
@@ -115,3 +114,8 @@ class Event(db.Model):
     creator = db.relationship('User', backref=db.backref('created_events'))
     closed = db.Column('closed', db.Boolean(), default=False)
     view_count = db.Column('view_count', db.Integer(), default=0)
+
+
+class InstitutionSchema(ma.ModelSchema):
+    class Meta:
+        model = Institution
