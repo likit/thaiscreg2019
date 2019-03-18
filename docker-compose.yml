@@ -9,9 +9,9 @@ services:
       - 80:5000
     env_file:
       - web_variables.env
+      - pg_variables.env
     environment:
       - FLASK_DEBUG
-      - POSTGRES_PASSWORD
     volumes:
       - ./app:/app
   pg:
