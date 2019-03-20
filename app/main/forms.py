@@ -47,7 +47,8 @@ class RegisterCellForm(FlaskForm):
     alternative_names = StringField('Alternative Name(s)')
     available = SelectField('Availability', choices=[
         ('0', 'Available with no restrictions'),
-        ('1', 'Available for Non-commercial Research')
+        ('1', 'Available for non-commercial research only'),
+        ('2', 'Currently not available')
     ])
     karyotyped = SelectField('Has the cell line been karyotyped?',
                              choices=[('no', 'No'), ('yes', 'Yes')],
