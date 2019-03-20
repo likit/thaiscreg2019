@@ -28,7 +28,7 @@
                                             </span>&nbsp;
                                             Account
                                         </a>
-                                        <a class="button is-danger is-rounded"
+                                        <a class="button is-light is-rounded"
                                            href="{{ url_for('main.log_user_out') }}">
                                             <span class="icon">
                                                <i class="fas fa-power-off"></i>
@@ -1003,7 +1003,7 @@
                 deleteMarker: function (marker, event) {
                     for (let i=0; i < this.markerList.length; i++) {
                         if (this.markerList[i].name === marker.name) {
-                            this.markerList.splice(i);
+                            this.markerList.splice(i,1);
                         }
                     }
                 },
