@@ -61,6 +61,13 @@
                                 <span class="tag"><% props.row.view_count %></span>
                             </a>
                         </b-table-column>
+                        <b-table-column field="edit" label="Edit">
+                            <a v-bind:href="'/cell/edit/'+props.row.id">
+                                        <span class="icon">
+                                            <i class="far fa-pencil-alt"></i>
+                                        </span>
+                            </a>
+                        </b-table-column>
                     </template>
                     <template slot="detail" slot-scope="props">
                         <article class="media">
