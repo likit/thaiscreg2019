@@ -98,10 +98,10 @@
                                         <div class="field">
                                             <p class="control is-expanded">
                                             <div class="radio">
-                                            {% for ct in form.cell_type %}
-                                                {{ ct(**{'v-model': 'cellType'}) }}
-                                                {{ ct.label }}
-                                            {% endfor %}
+                                                {% for ct in form.cell_type %}
+                                                    {{ ct(**{'v-model': 'cellType'}) }}
+                                                    {{ ct.label }}
+                                                {% endfor %}
                                             </div>
                                             </p>
                                         </div>
@@ -133,16 +133,17 @@
                                     <div class="field-body">
                                         <div class="field">
                                             <p class="control is-expanded">
-                                                <div class="select">
-                                                    {{ form.available() }}
-                                                </div>
+                                            <div class="select">
+                                                {{ form.available() }}
+                                            </div>
                                             </p>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <br><h2 class="title has-text-link">Donor Information</h2>
+                        <br>
+                        <h2 class="title has-text-link">Donor Information</h2>
                         <div class="card">
                             <div class="card-header">
                                 <p class="card-header-title">General Donor Information</p>
@@ -215,9 +216,9 @@
                                     <div class="field-body">
                                         <div class="field">
                                             <p class="control is-expanded">
-                                                <div class="select">
-                                                    {{ form.donor_karyotyped() }}
-                                                </div>
+                                            <div class="select">
+                                                {{ form.donor_karyotyped() }}
+                                            </div>
                                             </p>
                                         </div>
                                     </div>
@@ -231,16 +232,17 @@
                                     <div class="field-body">
                                         <div class="field">
                                             <p class="control is-expanded">
-                                                <div class="select">
-                                                    {{ form.donor_gws() }}
-                                                </div>
+                                            <div class="select">
+                                                {{ form.donor_gws() }}
+                                            </div>
                                             </p>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <br><h2 class="title has-text-link" v-if="cellType=='MSC'">MSC Derivation</h2>
+                        <br>
+                        <h2 class="title has-text-link" v-if="cellType=='MSC'">MSC Derivation</h2>
                         <div class="card" v-if="cellType==='MSC'">
                             <div class="card-content">
                                 <div class="field is-horizontal">
@@ -259,7 +261,8 @@
                                 </div>
                             </div>
                         </div>
-                        <br><h2 class="title has-text-link" v-if="cellType=='hESC'">HESC Derivation</h2>
+                        <br>
+                        <h2 class="title has-text-link" v-if="cellType=='hESC'">HESC Derivation</h2>
                         <div class="card" v-if="cellType==='hESC'">
                             <div class="card-content">
                                 <div class="field is-horizontal">
@@ -285,9 +288,9 @@
                                     <div class="field-body">
                                         <div class="field">
                                             <p class="control is-expanded">
-                                                <div class="select">
-                                                    {{ form.ivf_treatment(class="input") }}
-                                                </div>
+                                            <div class="select">
+                                                {{ form.ivf_treatment(class="input") }}
+                                            </div>
                                             </p>
                                         </div>
                                     </div>
@@ -352,7 +355,8 @@
                                 </div>
                             </div>
                         </div>
-                        <br><h2 class="title has-text-link" v-if="cellType=='hiPSC'">HIPSC Derivation</h2>
+                        <br>
+                        <h2 class="title has-text-link" v-if="cellType=='hiPSC'">HIPSC Derivation</h2>
                         <div class="card" v-if="cellType==='hiPSC'">
                             <div class="card-header">
                                 <p class="card-header-title">General</p>
@@ -522,7 +526,8 @@
                                 </div>
                             </div>
                         </div>
-                        <br><h2 class="title has-text-link">Culture Conditions</h2>
+                        <br>
+                        <h2 class="title has-text-link">Culture Conditions</h2>
                         <div class="card">
                             <div class="card-content">
                                 <div class="field is-horizontal">
@@ -548,9 +553,9 @@
                                     <div class="field-body">
                                         <div class="field">
                                             <p class="control is-expanded">
-                                                <div class="select">
-                                                    {{ form.culture_feeder_cells() }}
-                                                </div>
+                                            <div class="select">
+                                                {{ form.culture_feeder_cells() }}
+                                            </div>
                                             </p>
                                         </div>
                                     </div>
@@ -626,9 +631,9 @@
                                     <div class="field-body">
                                         <div class="field">
                                             <p class="control is-expanded">
-                                                <div class="select">
-                                                    {{ form.culture_rock_inhibitor_used_at_passage(class="input") }}
-                                                </div>
+                                            <div class="select">
+                                                {{ form.culture_rock_inhibitor_used_at_passage(class="input") }}
+                                            </div>
                                             </p>
                                         </div>
                                     </div>
@@ -681,48 +686,76 @@
                                     <div class="field-body">
                                         <table class="table" v-if="markerList.length > 0">
                                             <thead>
-                                                <th>Name</th>
-                                                <th>Expressed</th>
-                                                <th>Immunostaining</th>
-                                                <th>RT-PCR</th>
-                                                <th>FACTS</th>
-                                                <th>Enzymatic Assay</th>
-                                                <th>Expression Profiles</th>
+                                            <th>Name</th>
+                                            <th>Expressed</th>
+                                            <th>Immunostaining</th>
+                                            <th>RT-PCR</th>
+                                            <th>FACTS</th>
+                                            <th>Enzymatic Assay</th>
+                                            <th>Expression Profiles</th>
+                                            <th></th>
                                             </thead>
                                             <tbody>
-                                                <tr v-for="mk in markerList">
-                                                    <td><% mk.name %></td>
-                                                    <td>
+                                            <tr v-for="mk in markerList">
+                                                <td><input class="input" type="text" v-model="mk.name"></td>
+                                                <td>
+                                                    <div class="field">
+                                                        <p class="control is-expanded">
+                                                        <div class="select">
+                                                            <select v-model="mk.expressed">
+                                                                <option value="no">No</option>
+                                                                <option value="yes">Yes</option>
+                                                            </select>
+                                                        </div>
+                                                        </p>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="field">
+                                                        <p class="control is-expanded">
+                                                        <div class="select">
+                                                            <select v-model="mk.immunostaining">
+                                                                <option value="no">No</option>
+                                                                <option value="yes">Yes</option>
+                                                            </select>
+                                                        </div>
+                                                        </p>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="field">
+                                                        <p class="control is-expanded">
+                                                        <div class="select">
+                                                            <select v-model="mk.rtpcr">
+                                                                <option value="no">No</option>
+                                                                <option value="yes">Yes</option>
+                                                            </select>
+                                                        </div>
+                                                        </p>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="field">
+                                                        <p class="control is-expanded">
+                                                        <div class="select">
+                                                            <select v-model="mk.facts">
+                                                                <option value="no">No</option>
+                                                                <option value="yes">Yes</option>
+                                                            </select>
+                                                        </div>
+                                                        </p>
+                                                    </div>
+                                                </td>
+                                                <td><input class="input" type="text" v-model="mk.enzyme"></td>
+                                                <td><input class="input" type="text" v-model="mk.profiles"></td>
+                                                <td>
+                                                    <a @click="deleteMarker(mk)">
                                                         <span class="icon">
-                                                            <i class="fas fa-check has-text-success" v-if="mk.expressed==='yes'"></i>
-                                                            <i class="fas fa-times has-text-danger" v-if="mk.expressed==='no'"></i>
+                                                            <i class="fas fa-trash-alt"></i>
                                                         </span>
-                                                    </td>
-                                                    <td>
-                                                        <span class="icon">
-                                                            <i class="fas fa-check has-text-success" v-if="mk.immunostaining==='yes'"></i>
-                                                            <i class="fas fa-times has-text-danger" v-if="mk.immunostaining==='no'"></i>
-                                                        </span>
-                                                    </td>
-                                                    <td>
-                                                        <span class="icon">
-                                                            <i class="fas fa-check has-text-success" v-if="mk.rtpcr==='yes'"></i>
-                                                            <i class="fas fa-times has-text-danger" v-if="mk.rtpcr==='no'"></i>
-                                                        </span>
-                                                    </td>
-                                                    <td>
-                                                        <span class="icon">
-                                                            <i class="fas fa-check has-text-success" v-if="mk.facts==='yes'"></i>
-                                                            <i class="fas fa-times has-text-danger" v-if="mk.facts==='no'"></i>
-                                                        </span>
-                                                    </td>
-                                                    <td>
-                                                        <% mk.enzyme %>
-                                                    </td>
-                                                    <td>
-                                                        <% mk.profiles %>
-                                                    </td>
-                                                </tr>
+                                                    </a>
+                                                </td>
+                                            </tr>
                                             </tbody>
                                         </table>
                                     </div>
@@ -731,8 +764,11 @@
                                     <div class="field-label is-normal">
                                         <label class="label">
                                             <button class="button is-success is-rounded" :disabled="markerName===''"
-                                                type="button" @click="addMarker($event)">
-                                                Add Marker</button>
+                                                    type="button" @click="addMarker($event)">
+                                                <span class="icon">
+                                                    <i class="fas fa-plus"></i>
+                                                </span><span>Add Marker</span>
+                                            </button>
                                         </label>
                                     </div>
                                     <div class="field-body">
@@ -740,9 +776,9 @@
                                             <label>Name</label>
                                             <p class="control is-expanded">
                                                 <input type="text" class="input" v-model="markerName"
-                                                    placeholder="Marker Name"
+                                                       placeholder="Marker Name"
                                                        @keydown.enter="addMarker($event)"
-                                                    >
+                                                >
                                             </p>
                                         </div>
                                         <div class="field">
@@ -867,7 +903,8 @@
                                 </div>
                             </div>
                         </div>
-                        <br><h2 class="title has-text-link">Genotyping</h2>
+                        <br>
+                        <h2 class="title has-text-link">Genotyping</h2>
                         <div class="card">
                             <div class="card-header">
                                 <p class="card-header-title">Karyotyping (Cell Line)</p>
@@ -882,9 +919,9 @@
                                     <div class="field-body">
                                         <div class="field">
                                             <p class="control is-expanded">
-                                                <div class="select">
-                                                    {{ form.karyotyped() }}
-                                                </div>
+                                            <div class="select">
+                                                {{ form.karyotyped() }}
+                                            </div>
                                             </p>
                                         </div>
                                     </div>
@@ -937,13 +974,13 @@
                 }
             },
             computed: {
-                jsonMarkerData: function() {
+                jsonMarkerData: function () {
                     var self = this;
                     return JSON.stringify(self.markerList);
                 }
             },
             methods: {
-                addMarker: function(event) {
+                addMarker: function (event) {
                     var self = this;
                     self.markerList.push({
                         name: self.markerName,
@@ -962,6 +999,13 @@
                     self.markerEnzyme = "";
                     self.markerProfiles = "";
                     event.preventDefault();
+                },
+                deleteMarker: function (marker, event) {
+                    for (let i=0; i < this.markerList.length; i++) {
+                        if (this.markerList[i].name === marker.name) {
+                            this.markerList.splice(i);
+                        }
+                    }
                 },
             }
         });
