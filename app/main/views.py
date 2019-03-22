@@ -87,6 +87,8 @@ def log_user_out():
 @login_required
 def account_dash():
     projects = {'pending': 0, 'approved': 0, 'total': 0}
+    cells = {'pending': 0, 'approved': 0, 'total': 0}
+    affil_cells = {'pending': 0, 'approved': 0, 'total': 0}
     affil_researchers = []
     affil_projects = {'pending': 0, 'approved': 0, 'total': 0}
     if current_user.profile.affil is not None:
@@ -96,8 +98,14 @@ def account_dash():
                     affil_projects['pending'] += 1
                 elif proj.status.status == 'approved':
                     affil_projects['approved'] += 1
-            affil_projects['total'] += 1
+                affil_projects['total'] += 1
             affil_researchers.append(researcher)
+            for cell in researcher.user.own_cells:
+                if cell.status.status == 'pending':
+                    affil_cells['pending'] += 1
+                elif cell.status.status == 'approved':
+                    affil_cells['approved'] += 1
+                affil_cells['total'] += 1
 
     for proj in current_user.created_projects:
         if proj.status.status == 'pending':
@@ -105,10 +113,20 @@ def account_dash():
         elif proj.status.status == 'approved':
             projects['approved'] += 1
         projects['total'] += 1
+
+    for cell in current_user.own_cells:
+        if cell.status.status == 'pending':
+            cells['pending'] += 1
+        elif cell.status.status == 'approved':
+            cells['approved'] += 1
+        cells['total'] += 1
+
     return render_template('main/account_dash.html',
                            projects=projects,
+                           affil_cells=affil_cells,
                            affil_projects=affil_projects,
                            affil_researchers=affil_researchers,
+                           cells=cells,
                            page_name='dashboard')
 
 
@@ -267,6 +285,7 @@ def edit_profile():
 @login_required
 def account_cells():
     cells = []
+    status_filter = request.args.get('status_filter', 'all')
     for c in current_user.own_cells:
         cells.append({
             'id': c.id,
@@ -288,9 +307,16 @@ def account_cells():
             'data': c.data,
             'view_count': c.view_count or 0,
         })
+
+    if status_filter is None or status_filter == 'all':
+        filtered_cells = cells
+        status_filter = None
+    else:
+        filtered_cells = [c for c in cells if c['status'] == status_filter]
     return render_template('main/account_cells.html',
                            page_name='cell',
-                           cells=cells)
+                           status_filter=status_filter,
+                           cells=filtered_cells)
 
 
 @main.route('/cell/edit/<int:cell_id>', methods=['GET', 'POST'])
@@ -499,6 +525,7 @@ def register_project():
 @main.route('/cells', methods=['GET', 'POST'])
 def show_cell_list():
     cell_type = request.args.get('cell-type', 'all')
+    query = request.args.get('query', '')
     cells = []
     filtered_cells = []
     for c in Cell.query.all():
@@ -526,6 +553,23 @@ def show_cell_list():
             filtered_cells = [c for c in cells if c['cell_type'] == cell_type]
         else:
             filtered_cells = cells
+
+    query_filtered_cells = []
+    if query:
+        for cell in filtered_cells:
+            if str(cell['id']) == query:
+                query_filtered_cells.append(cell)
+            elif 'THSCR-'+str(cell['id']) == query:
+                query_filtered_cells.append(cell)
+            elif 'thscr-'+str(cell['id']) == query:
+                query_filtered_cells.append(cell)
+            elif cell['data'].get('donor', {}).get('diseases', '').lower().find(query.lower()) > -1:
+                query_filtered_cells.append(cell)
+            elif [match for match in cell['alt_names'] if match.lower().find(query.lower()) > -1]:
+                query_filtered_cells.append(cell)
+    else:
+        query_filtered_cells = filtered_cells
+
     return render_template('main/cells.html',
                            page_name='cell',
-                           cells=filtered_cells)
+                           cells=query_filtered_cells)
