@@ -132,9 +132,9 @@
                                     </a>
                                 </b-table-column>
                                 <b-table-column field="alt_names" label="Alternative Names" width="200" sortable>
-                                    <a @click="toggle(props.row)">
-                                        <% props.row.alt_names %>
-                                    </a>
+                                    <span class="tag is-info is-rounded" v-for="name in props.row.alt_names">
+                                        <% name %>
+                                    </span>
                                 </b-table-column>
                                 <b-table-column field="generator" label="Generator Institution" width="300" sortable>
                                     <% props.row.institution_name %> (<% props.row.institution_campus %>)
@@ -149,7 +149,7 @@
                                     <% props.row.status %>
                                 </b-table-column>
                                 <b-table-column field="view" label="View">
-                                    <a v-bind:href="'/cell/'+props.row.id">
+                                    <a v-bind:href="'/cell/'+props.row.id" v-if="props.row.status==='approved'">
                                         <span class="icon">
                                             <i class="far fa-eye"></i>
                                         </span>
@@ -181,7 +181,7 @@
                                                 </div>
                                                 <div class="control">
                                                     <small>
-                                                        <a class="has-text-link"
+                                                        <a class="has-text-link" v-if="props.row.status==='approved'"
                                                            v-bind:href="'/cell/' + props.row.id"
                                                         >View detail..</a>
                                                     </small>
