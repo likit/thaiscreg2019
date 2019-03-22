@@ -48,7 +48,7 @@ def index():
 
 @main.route('/login_form', methods=['GET', 'POST'])
 def log_user_in():
-    error_msg = None
+    error_msg = ''
     if current_user.is_authenticated:
         return redirect(url_for('main.account_dash'))
     form = LogInForm()
@@ -67,6 +67,10 @@ def log_user_in():
                 error_msg = 'Password is not correct.'
         else:
             error_msg = 'Email does not exist.'
+    else:
+        for field, errors in form.errors.items():
+            for error in errors:
+                error_msg += ' ' + error
 
     return render_template('main/login.html', form=form,
                            error_msg=error_msg)
