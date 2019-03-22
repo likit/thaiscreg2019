@@ -572,4 +572,5 @@ def show_cell_list():
 
     return render_template('main/cells.html',
                            page_name='cell',
+                           query=query,
                            cells=query_filtered_cells)

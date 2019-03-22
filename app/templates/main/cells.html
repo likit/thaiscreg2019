@@ -19,7 +19,7 @@
                                 Home
                             </a>
                             <a class="navbar-item is-active"
-                                href="{{ url_for('main.show_cell_list') }}">
+                               href="{{ url_for('main.show_cell_list') }}">
                                 Cells
                             </a>
                             <a class="navbar-item"
@@ -33,7 +33,7 @@
                                 About
                             </a>
                             {% if current_user.is_authenticated %}
-                                <div class="navbar-item" >
+                                <div class="navbar-item">
                                     <div class="buttons">
                                         <a class="button is-rounded is-light"
                                            href="{{ url_for('main.account_dash') }}">
@@ -110,7 +110,7 @@
                     <div class="box" id="app">
                         {% if query %}
                             <div class="tags has-addons">
-                                <span class="tag">Query</span>
+                                <span class="tag is-dark">Query</span>
                                 <span class="tag is-warning">{{ query }}</span>
                             </div>
                         {% endif %}
@@ -146,7 +146,7 @@
                                     <% props.row.update_datetime %>
                                 </b-table-column>
                                 <b-table-column field="status" label="Status" sortable>
-                                    <% props.row.status %>
+                                    <span class="tag is-link"><% props.row.status %></span>
                                 </b-table-column>
                                 <b-table-column field="view" label="View">
                                     <a v-bind:href="'/cell/'+props.row.id" v-if="props.row.status==='approved'">
@@ -170,35 +170,38 @@
                                                 </small>
                                             </p>
                                             <p>
-                                            <div class="field is-grouped is-grouped-multiline">
-                                                <div class="control">
-                                                    <div class="tags has-addons">
-                                                        <span class="tag is-dark">status</span>
-                                                        <span class="tag is-info">
-                                                        <% props.row.status %>
-                                                    </span>
+                                                <div class="field is-grouped is-grouped-multiline">
+                                                    <div class="control">
+                                                        <div class="tags has-addons">
+                                                            <span class="tag is-dark">status</span>
+                                                            <span class="tag is-info">
+                                                            <% props.row.status %>
+                                                        </span>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <div class="control">
-                                                    <small>
-                                                        <a class="has-text-link" v-if="props.row.status==='approved'"
-                                                           v-bind:href="'/cell/' + props.row.id"
-                                                        >View detail..</a>
-                                                    </small>
-                                                </div>
-                                            </div>
-                                            <span class="icon">
-                                            <i class="fas fa-pencil-alt"></i>
-                                        </span>
-                                            <small>
-                                                <% props.row.update_datetime %>
-                                            </small>
-                                            <span class="icon">
-                                            <i class="far fa-eye"></i>
-                                        </span>
-                                            <small>
-                                                <% props.row.last_view %>
-                                            </small>
+                                                <span class="icon">
+                                                    <i class="fas fa-pencil-alt"></i>
+                                                </span>
+                                                <small>
+                                                    <% props.row.update_datetime %>
+                                                </small>
+                                                <span class="icon">
+                                                    <i class="far fa-eye"></i>
+                                                </span>
+                                                <small>
+                                                    <% props.row.last_view %>
+                                                </small>
+                                                <small>
+                                                    <a class="button is-rounded is-light is-small"
+                                                       v-if="props.row.status==='approved'"
+                                                       v-bind:href="'/cell/' + props.row.id">
+                                                        <span>see detail</span>
+                                                        <span class="icon">
+                                                            <i class="fas fa-chevron-right"></i>
+                                                        </span>
+                                                    </a>
+                                                </small>
                                             </p>
                                         </div>
                                     </div>
