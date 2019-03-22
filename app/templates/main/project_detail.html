@@ -27,9 +27,6 @@
                                 Projects
                             </a>
                             <a class="navbar-item">
-                                Researchers
-                            </a>
-                            <a class="navbar-item">
                                 About
                             </a>
                             {% if current_user.is_authenticated %}
@@ -158,6 +155,7 @@
                                     <td><strong>Cell Line</strong></td>
                                     <td>
                                         <div class="control">
+                                            {% if project.cell.id %}
                                             <a href="{{ url_for('main.display_cell_info', cell_id=project.cell.id) }}">
                                                 <div class="tags has-addons">
                                                     <span class="tag is-dark">{{ project.cell.cell_type }}</span>
@@ -166,6 +164,7 @@
                                                     </span>
                                                 </div>
                                             </a>
+                                            {% endif %}
                                         </div>
                                     </td>
                                 </tr>
@@ -179,6 +178,33 @@
 {% endblock %}
 {% block scripts %}
     {{ super() }}
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // Get all "navbar-burger" elements
+            const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
+
+            // Check if there are any navbar burgers
+            if ($navbarBurgers.length > 0) {
+
+                // Add a click event on each of them
+                $navbarBurgers.forEach(el => {
+                    el.addEventListener('click', () => {
+
+                        // Get the target from the "data-target" attribute
+                        const target = el.dataset.target;
+                        const $target = document.getElementById(target);
+
+                        // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
+                        el.classList.toggle('is-active');
+                        $target.classList.toggle('is-active');
+
+                    });
+                });
+            }
+
+        });
+    </script>
     <script>
         var vueApp = new Vue({
             el: '#app',
