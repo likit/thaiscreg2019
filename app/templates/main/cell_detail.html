@@ -19,7 +19,7 @@
                                 Home
                             </a>
                             <a class="navbar-item"
-                                href="{{ url_for('main.show_cell_list') }}">
+                               href="{{ url_for('main.show_cell_list') }}">
                                 Cells
                             </a>
                             <a class="navbar-item is-active"
@@ -33,7 +33,7 @@
                                 About
                             </a>
                             {% if current_user.is_authenticated %}
-                                <div class="navbar-item" >
+                                <div class="navbar-item">
                                     <div class="buttons">
                                         <a class="button is-rounded is-light"
                                            href="{{ url_for('main.account_dash') }}">
@@ -66,7 +66,7 @@
         <div class="hero-body">
             <div class="container has-text-centered">
                 <div class="columns">
-                    <div class="column">
+                    <div class="column is-centered">
                         <img src="{{ url_for('static', filename='img/network.png') }}" width="100">
                         <h1 class="title">Cell Line Detail</h1>
                         <h1 class="subtitle">ID THSCR-{{ cell.id }}</h1>
@@ -79,6 +79,16 @@
         <div class="container">
             <div class="columns">
                 <div class="column has-text-right">
+                    {% if current_user.is_authenticated and cell in current_user.own_cells %}
+                        <a class="button is-link is-rounded"
+                           href="{{ url_for('main.edit_cell', cell_id=cell.id) }}"
+                        >
+                        <span class="icon">
+                            <i class="fas fa-pencil-alt"></i>
+                        </span>&nbsp;
+                            Edit Cell Line
+                        </a>
+                    {% endif %}
                     <a class="button is-link is-rounded"
                        href="{{ url_for('main.register_cell') }}"
                     >
@@ -101,7 +111,12 @@
                                 <col width="40%">
                                 <tr>
                                     <td>ID</td>
-                                    <td>{{ cell.id }}</td>
+                                    <td>
+                                        <div class="tags has-addons">
+                                            <span class="tag is-dark is-medium">THSCR</span>
+                                            <span class="tag is-success is-medium">{{ cell.id }}</span>
+                                        </div>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td>Cell Type</td>
@@ -109,7 +124,15 @@
                                 </tr>
                                 <tr>
                                     <td>Alternative names</td>
-                                    <td>{{ cell.alt_names }}</td>
+                                    <td>
+                                        {% for altname in cell.data.get('alt_names', []) %}
+                                            <span class="tag is-light is-rounded is-medium">{{ altname }}</span>
+                                        {% endfor %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Comment</td>
+                                    <td>{{ cell.data.get('comment', '') }}</td>
                                 </tr>
                                 <tr>
                                     <td>Last update</td>
@@ -117,14 +140,15 @@
                                 </tr>
                                 <tr>
                                     <td>Availability</td>
-                                    <td>{{ cell.data.get('availability') }}</td>
+                                    <td>{{ cell_availability }}</td>
                                 </tr>
                             </table>
                         </div>
                     </div>
                 </div>
             </div>
-            <br><h1 class="title has-text-info">Donor Information</h1>
+            <br>
+            <h1 class="title has-text-info">Donor Information</h1>
             <div class="columns">
                 <div class="column">
                     <div class="card">
@@ -150,11 +174,11 @@
                                 <col width="40%">
                                 <tr>
                                     <td>Diseases</td>
-                                    <td>{{ cell.data.get('donor').get('diseases', '').title() }}</td>
+                                    <td>{{ cell.data.get('donor').get('diseases', '') }}</td>
                                 </tr>
                                 <tr>
                                     <td>Diseases-associated phenotypes</td>
-                                    <td>{{ cell.data.get('donor').get('disease_associated_phenotypes', '').title() }}</td>
+                                    <td>{{ cell.data.get('donor').get('disease_associated_phenotypes', '') }}</td>
                                 </tr>
                             </table>
                         </div>
@@ -195,7 +219,8 @@
                     </div>
                 </div>
             </div>
-            <br><h1 class="title has-text-info">Culture Conditions</h1>
+            {% if cell.cell_type=='hiPSC' %}
+            <br><h1 class="title has-text-info">HIPSC Derivation</h1>
             <div class="columns">
                 <div class="column">
                     <div class="card">
@@ -203,14 +228,38 @@
                             <table class="table is-fullwidth is-striped">
                                 <col width="40%">
                                 <tr>
-                                    <td>Surface coating</td>
-                                    <td>{{ cell.data.get('culture').get('surface_coating', '').title() }}</td>
+                                    <td>Source cell type</td>
+                                    <td>{{ cell.data.get('hipsc').get('source_cell_type', '') }}</td>
                                 </tr>
                                 <tr>
-                                    <td>Feeder cells</td>
+                                    <td>Source cell origin</td>
+                                    <td>{{ cell.data.get('hipsc').get('source_cell_origin', '') }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Age of donor at collection</td>
+                                    <td>{{ cell.data.get('hipsc').get('age_of_collection', '') }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Collected in</td>
+                                    <td>{{ cell.data.get('hipsc').get('collected_in', '') }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Vector type</td>
+                                    <td>{{ cell.data.get('hipsc').get('vector_type', '') }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Vector</td>
+                                    <td>{{ cell.data.get('hipsc').get('vector', '') }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Selection criteria for clones</td>
+                                    <td>{{ cell.data.get('hipsc').get('selection_criteria', '') }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Derived under xeno-free condition?</td>
                                     <td>
                                         <span class="icon">
-                                        {% if cell.data.get('culture').get('feeder_cells', '') == 'no' %}
+                                        {% if cell.data.get('hipsc').get('derived_condition', {}).get('xeno_free') == 'no' %}
                                             <i class="fas fa-times has-text-danger"></i>
                                         {% else %}
                                             <i class="fas fa-check has-text-success"></i>
@@ -219,8 +268,129 @@
                                     </td>
                                 </tr>
                                 <tr>
+                                    <td>Derived under GMP?</td>
+                                    <td>
+                                        <span class="icon">
+                                        {% if cell.data.get('hipsc').get('derived_condition', {}).get('under_gmp') == 'no' %}
+                                            <i class="fas fa-times has-text-danger"></i>
+                                        {% else %}
+                                            <i class="fas fa-check has-text-success"></i>
+                                        {% endif %}
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Available as clinical grade?</td>
+                                    <td>
+                                        <span class="icon">
+                                        {% if cell.data.get('hipsc').get('clinical_grade_available', '') == 'no' %}
+                                            <i class="fas fa-times has-text-danger"></i>
+                                        {% else %}
+                                            <i class="fas fa-check has-text-success"></i>
+                                        {% endif %}
+                                        </span>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            {% if cell.cell_type=='hESC' %}
+            <br>
+            <h1 class="title has-text-info">HESC Derivation</h1>
+            <div class="columns">
+                <div class="column">
+                    <div class="card">
+                        <div class="card-content">
+                            <table class="table is-fullwidth is-striped">
+                                <col width="40%">
+                                <tr>
+                                    <td>Embryo Stage</td>
+                                    <td>{{ cell.data.get('hesc').get('embryo_stage', '') }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Supernumerary embros from IVF treatment?</td>
+                                    <td>
+                                    <span class="icon">
+                                        {% if cell.data.get('hesc').get('ivf_treatment', '') == no %}
+                                            <i class="fas fa-times has-text-danger"></i>
+                                        {% else %}
+                                            <i class="fas fa-check has-text-success"></i>
+                                        {% endif %}
+                                    </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>PGD Embryo?</td>
+                                    <td>
+                                    <span class="icon">
+                                        {% if cell.data.get('hesc').get('pgd_embryo', '') == no %}
+                                            <i class="fas fa-times has-text-danger"></i>
+                                        {% else %}
+                                            <i class="fas fa-check has-text-success"></i>
+                                        {% endif %}
+                                    </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>ZP removal technique</td>
+                                    <td>{{ cell.data.get('hesc').get('zp_removal_technique', '') }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Cell isolation</td>
+                                    <td>{{ cell.data.get('hesc').get('cell_isolation', '') }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Cell seeding</td>
+                                    <td>{{ cell.data.get('hesc').get('cell_seeding', '') }}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            {% if cell.cell_type=='MSC' %}
+            <br><h1 class="title has-text-info">MSC Derivation</h1>
+            <div class="columns">
+                <div class="column">
+                    <div class="card">
+                        <div class="card-content">
+                            <table class="table is-fullwidth is-striped">
+                                <col width="40%">
+                                <tr>
+                                    <td>Source cell origin</td>
+                                    <td>{{ cell.data.get('msc').get('source_cell_origin', '') }}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            <br>
+            <h1 class="title has-text-info">Culture Conditions</h1>
+            <div class="columns">
+                <div class="column">
+                    <div class="card">
+                        <div class="card-content">
+                            <table class="table is-fullwidth is-striped">
+                                <col width="40%">
+                                <tr>
+                                    <td>Surface coating</td>
+                                    <td>{{ cell.data.get('culture').get('surface_coating', '') }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Feeder cells</td>
+                                    <td>
+                                        {{ cell.data.get('culture', {}).get('feeder_cells', '') }}</td>
+                                    </td>
+                                </tr>
+                                <tr>
                                     <td>Passage method</td>
-                                    <td>{{ cell.data.get('culture').get('passage_method', '').title() }}</td>
+                                    <td>{{ cell.data.get('culture').get('passage_method', '') }}</td>
                                 </tr>
                                 <tr>
                                     <td>CO2 concentration</td>
@@ -235,7 +405,9 @@
                                     <td>{{ cell.data.get('culture').get('medium', '') }}</td>
                                 </tr>
                                 <tr>
-                                    <td>Has Rock inhibitor (Y27632) been used at passage previously with this cell line?</td>
+                                    <td>Has Rock inhibitor (Y27632) been used at passage previously with this cell
+                                        line?
+                                    </td>
                                     <td>
                                         <span class="icon">
                                         {% if cell.data.get('culture').get('rock_inhibitor_passage', '') == 'no' %}
@@ -247,7 +419,8 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>Has Rock inhibitor (Y27632) been used at cryo previously with this cell line?</td>
+                                    <td>Has Rock inhibitor (Y27632) been used at cryo previously with this cell line?
+                                    </td>
                                     <td>
                                         <span class="icon">
                                         {% if cell.data.get('culture').get('rock_inhibitor_cryo', '') == 'no' %}
@@ -259,7 +432,8 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>Has Rock inhibitor (Y27632) been used at thaw previously with this cell line?</td>
+                                    <td>Has Rock inhibitor (Y27632) been used at thaw previously with this cell line?
+                                    </td>
                                     <td>
                                         <span class="icon">
                                         {% if cell.data.get('culture').get('rock_inhibitor_thaw', '') == 'no' %}
@@ -275,7 +449,8 @@
                     </div>
                 </div>
             </div>
-            <br><h1 class="title has-text-info">Characterization</h1>
+            <br>
+            <h1 class="title has-text-info">Characterization</h1>
             <div class="columns">
                 <div class="column">
                     <div class="card">
@@ -289,9 +464,9 @@
                                 <th>Enzymatic assay</th>
                                 <th>Expression profiles</th>
                                 {% for marker in cell.data.get('characterization', {}).get('markers', {}) %}
-                                <tr>
-                                    <td>{{ marker.get('name', '').title() }}</td>
-                                    <td>
+                                    <tr>
+                                        <td>{{ marker.get('name', '') }}</td>
+                                        <td>
                                         <span class="icon">
                                         {% if marker.get('expressed', '') == 'no' %}
                                             <i class="fas fa-times has-text-danger"></i>
@@ -299,8 +474,8 @@
                                             <i class="fas fa-check has-text-success"></i>
                                         {% endif %}
                                         </span>
-                                    </td>
-                                    <td>
+                                        </td>
+                                        <td>
                                         <span class="icon">
                                         {% if marker.get('immunostaining', '') == 'no' %}
                                             <i class="fas fa-times has-text-danger"></i>
@@ -308,8 +483,8 @@
                                             <i class="fas fa-check has-text-success"></i>
                                         {% endif %}
                                         </span>
-                                    </td>
-                                    <td>
+                                        </td>
+                                        <td>
                                         <span class="icon">
                                         {% if marker.get('rtpcr', '') == 'no' %}
                                             <i class="fas fa-times has-text-danger"></i>
@@ -317,8 +492,8 @@
                                             <i class="fas fa-check has-text-success"></i>
                                         {% endif %}
                                         </span>
-                                    </td>
-                                    <td>
+                                        </td>
+                                        <td>
                                         <span class="icon">
                                         {% if marker.get('facts', '') == 'no' %}
                                             <i class="fas fa-times has-text-danger"></i>
@@ -326,26 +501,14 @@
                                             <i class="fas fa-check has-text-success"></i>
                                         {% endif %}
                                         </span>
-                                    </td>
-                                    <td>
-                                        <span class="icon">
-                                        {% if marker.get('enzyme', '') == 'no' %}
-                                            <i class="fas fa-times has-text-danger"></i>
-                                        {% elif marker.get('enzyme', '') == 'yes' %}
-                                            <i class="fas fa-check has-text-success"></i>
-                                        {% endif %}
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <span class="icon">
-                                        {% if marker.get('profiles', '') == 'no' %}
-                                            <i class="fas fa-times has-text-danger"></i>
-                                        {% elif marker.get('profiles', '') == 'yes' %}
-                                            <i class="fas fa-check has-text-success"></i>
-                                        {% endif %}
-                                        </span>
-                                    </td>
-                                </tr>
+                                        </td>
+                                        <td>
+                                            {{ marker.get('enzyme', '') }}
+                                        </td>
+                                        <td>
+                                            {{ marker.get('profiles', '') }}
+                                        </td>
+                                    </tr>
                                 {% endfor %}
                             </table>
                         </div>
@@ -359,31 +522,32 @@
                                 <col width="40%">
                                 <tr>
                                     <td>Endoderm</td>
-                                    <td>{{ cell.data.get('characterization', {}).get('endoderm', '') }}</td>
+                                    <td>{{ cell.data.get('characterization', {}).get('endoderm_potency', '') }}</td>
                                 </tr>
                                 <tr>
                                     <td>Ectoderm</td>
-                                    <td>{{ cell.data.get('characterization', {}).get('ectoderm', '') }}</td>
+                                    <td>{{ cell.data.get('characterization', {}).get('ectoderm_potency', '') }}</td>
                                 </tr>
                                 <tr>
                                     <td>Mesoderm</td>
-                                    <td>{{ cell.data.get('characterization', {}).get('mesoderm', '') }}</td>
+                                    <td>{{ cell.data.get('characterization', {}).get('mesoderm_potency', '') }}</td>
                                 </tr>
                             </table>
                         </div>
                     </div>
                 </div>
             </div>
-            <br><h1 class="title has-text-info">Genotyping</h1>
+            <br>
+            <h1 class="title has-text-info">Genotyping</h1>
             <div class="columns">
                 <div class="column">
                     <div class="card">
                         <div class="card-content">
-                        <table class="table is-striped is-fullwidth">
-                            <col width="40%">
-                            <tr>
-                                <td>Has the cell line been karyotyped?</td>
-                                <td>
+                            <table class="table is-striped is-fullwidth">
+                                <col width="40%">
+                                <tr>
+                                    <td>Has the cell line been karyotyped?</td>
+                                    <td>
                                         <span class="icon">
                                         {% if cell.data.get('genotyping', {}).get('karyotyped', '') == 'no' %}
                                             <i class="fas fa-times has-text-danger"></i>
@@ -391,15 +555,15 @@
                                             <i class="fas fa-check has-text-success"></i>
                                         {% endif %}
                                         </span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Karyotype</td>
-                                <td>
-                                    {{ cell.data.get('genotype', {}).get('karyotype') }}
-                                </td>
-                            </tr>
-                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Karyotype</td>
+                                    <td>
+                                        {{ cell.data.get('genotyping', {}).get('karyotype') }}
+                                    </td>
+                                </tr>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -414,8 +578,7 @@
             el: '#app',
             delimiters: ['<%', '%>'],
             data() {
-                return {
-                }
+                return {}
             },
             methods: {
                 toggle(row) {

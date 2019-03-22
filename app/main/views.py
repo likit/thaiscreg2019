@@ -1,4 +1,5 @@
 from datetime import datetime
+import pytz
 from flask import render_template, redirect, request, url_for
 from . import mainbp as main
 from .forms import SignUpForm, LogInForm, ProfileForm, RegisterCellForm, RegisterProjectForm
@@ -200,7 +201,7 @@ def show_projects():
 def display_project_info(project_id):
     project = Project.query.get(project_id)
     project.view_count += 1
-    project.last_view = datetime.utcnow()
+    project.last_view = datetime.now(tz=pytz.UTC)
     db.session.add(project)
     db.session.commit()
     return render_template('main/project_detail.html', project=project)
@@ -292,6 +293,51 @@ def account_cells():
                            cells=cells)
 
 
+@main.route('/cell/edit/<int:cell_id>', methods=['GET', 'POST'])
+@login_required
+def edit_cell(cell_id):
+    cell = Cell.query.get(cell_id)
+    form = RegisterCellForm()
+    institutions = [(str(current_user.profile.affil.id),
+                     current_user.profile.affil.name_th)]
+    form.institution.choices = institutions
+
+    if form.validate_on_submit():
+        data = request.form.get('hidden_data', None)
+        if data:
+            cell.data = loads(data)
+            cell.cell_type = form.cell_type.data
+            cell.update_datetime = datetime.now(tz=pytz.UTC)
+            db.session.add(cell)
+            db.session.commit()
+            return redirect(url_for('main.display_cell_info', cell_id=cell.id))
+
+    else:
+        for field, errors in form.errors.items():
+            for error in errors:
+                print(field, error)
+
+    form.institution.default = institutions[0][0]
+    form.available.default = cell.data['availability']
+    form.donor_gender.default = cell.data['donor']['sex']
+    form.donor_karyotyped.default = cell.data['donor']['karyotyped']
+    form.donor_gws.default = cell.data['donor']['genome_wide_study']
+    form.cell_type.default = cell.cell_type
+    form.ivf_treatment.default = cell.data['hesc']['ivf_treatment']
+    form.pgd_embryo.default = cell.data['hesc']['pgd_embryo']
+    form.vector_type.default = cell.data['hipsc']['vector_type']
+    form.xeno_free.default = cell.data['hipsc']['derived_condition']['xeno_free']
+    form.under_gmp.default = cell.data['hipsc']['derived_condition']['under_gmp']
+    form.clinical_grade_avail.default = cell.data['hipsc']['clinical_grade_available']
+    form.culture_feeder_cells.default = cell.data['culture']['feeder_cells']
+    form.culture_rock_inhibitor_used_at_thaw.default = cell.data['culture']['rock_inhibitor_thaw']
+    form.culture_rock_inhibitor_used_at_cryo.default = cell.data['culture']['rock_inhibitor_cryo']
+    form.culture_rock_inhibitor_used_at_passage.default = cell.data['culture']['rock_inhibitor_passage']
+    form.process()
+    return render_template('main/edit_cell.html', cell=cell,
+                           form=form)
+
+
 @main.route('/cell/register', methods=['GET', 'POST'])
 @login_required
 def register_cell():
@@ -308,10 +354,10 @@ def register_cell():
     if form.validate_on_submit():
         markers = request.form.get('markerData', '')
         markers = loads(markers)
-        print('form validated!')
-        print(form.institution.data, form.comment.data, form.cell_type.data, form.available.data)
+        altnames = request.form.get('altNames', '')
+        altnames = loads(altnames)
         data = {
-            'alt_names': form.alternative_names.data,
+            'alt_names': altnames,
             'comment': form.comment.data,
             'availability': form.available.data,
             'donor': {
@@ -369,15 +415,14 @@ def register_cell():
                 'cell_seeding': form.cell_seeding.data,
             },
         }
-        print(data)
         cell = Cell(
             institution_id=int(form.institution.data),
             cell_type=form.cell_type.data,
             user=current_user,
             data=data,
             status=pending_status,
-            register_datetime=datetime.utcnow(),
-            update_datetime=datetime.utcnow(),
+            register_datetime=datetime.now(tz=pytz.UTC),
+            update_datetime=datetime.now(tz=pytz.UTC),
         )
         db.session.add(cell)
         db.session.commit()
@@ -392,13 +437,16 @@ def register_cell():
 
 @main.route('/cell/<int:cell_id>', methods=['GET', 'POST'])
 def display_cell_info(cell_id=None):
+    from .forms import cell_availability
     if cell_id:
         cell = Cell.query.get(cell_id)
         cell.view_count += 1
-        cell.last_view = datetime.utcnow()
+        cell.last_view = datetime.now(tz=pytz.UTC)
         db.session.add(cell)
         db.session.commit()
-        return render_template('main/cell_detail.html', cell=cell)
+        cell_avail = cell_availability[int(cell.data.get('availability'))][1]
+        return render_template('main/cell_detail.html', cell=cell,
+                               cell_availability=cell_avail)
 
 
 @main.route('/project/register', methods=['GET', 'POST'])

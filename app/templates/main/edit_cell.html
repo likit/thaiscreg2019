@@ -54,7 +54,7 @@
                 <div class="columns">
                     <div class="column">
                         <img src="{{ url_for('static', filename='img/flask.png') }}" width="100">
-                        <h1 class="title">Register Cell Line</h1>
+                        <h1 class="title">Edit Cell Line</h1>
                     </div>
                 </div>
             </div>
@@ -98,17 +98,17 @@
                                         <div class="field">
                                             <p class="control is-expanded">
                                             <div class="radio">
-                                                {% for ct in form.cell_type %}
-                                                    {{ ct(**{'v-model': 'cellType'}) }}
-                                                    {{ ct.label }}
-                                                {% endfor %}
+                                            {% for ct in form.cell_type %}
+                                                {{ ct(**{'v-model': 'cellType'}) }}
+                                                {{ ct.label }}
+                                            {% endfor %}
                                             </div>
                                             </p>
                                         </div>
                                     </div>
                                 </div>
                                 <b-field horizontal label="Alternative Names">
-                                    <b-taginput v-model="altNames" rounded icon="label" type="is-success"></b-taginput>
+                                    <b-taginput v-model="data.alt_names" rounded icon="label" type="is-success"></b-taginput>
                                 </b-field>
                                 <div class="field is-horizontal">
                                     <div class="field-label is-normal">
@@ -119,7 +119,7 @@
                                     <div class="field-body">
                                         <div class="field">
                                             <p class="control is-expanded">
-                                                {{ form.comment(class="textarea") }}
+                                                {{ form.comment(class="textarea", **{'v-model': 'data.comment'}) }}
                                             </p>
                                         </div>
                                     </div>
@@ -181,7 +181,7 @@
                                     <div class="field-body">
                                         <div class="field">
                                             <p class="control is-expanded">
-                                                {{ form.donor_diseases(class="input") }}
+                                                {{ form.donor_diseases(class="input", **{'v-model': 'data.donor.diseases'}) }}
                                             </p>
                                         </div>
                                     </div>
@@ -195,7 +195,7 @@
                                     <div class="field-body">
                                         <div class="field">
                                             <p class="control is-expanded">
-                                                {{ form.donor_disease_assoc_phenotypes(class="input") }}
+                                                {{ form.donor_disease_assoc_phenotypes(class="input", **{'v-model': 'data.disease_associated_phenotypes'}) }}
                                             </p>
                                         </div>
                                     </div>
@@ -254,7 +254,7 @@
                                     <div class="field-body">
                                         <div class="field">
                                             <p class="control is-expanded">
-                                                {{ form.source_cell_origin(class="input") }}
+                                                {{ form.source_cell_origin(class="input", **{'v-model': "data.msc.source_cell_origin"}) }}
                                             </p>
                                         </div>
                                     </div>
@@ -274,7 +274,7 @@
                                     <div class="field-body">
                                         <div class="field">
                                             <p class="control is-expanded">
-                                                {{ form.embryo_stage(class="input") }}
+                                                {{ form.embryo_stage(class="input", **{'v-model': 'data.hesc.embryo_stage'}) }}
                                             </p>
                                         </div>
                                     </div>
@@ -289,7 +289,7 @@
                                         <div class="field">
                                             <p class="control is-expanded">
                                             <div class="select">
-                                                {{ form.ivf_treatment(class="input") }}
+                                                {{ form.ivf_treatment(**{'v-model': 'data.hesc.ivf_treatment'}) }}
                                             </div>
                                             </p>
                                         </div>
@@ -320,7 +320,7 @@
                                     <div class="field-body">
                                         <div class="field">
                                             <p class="control is-expanded">
-                                                {{ form.zp_removal_technique(class="input") }}
+                                                {{ form.zp_removal_technique(class="input", **{'v-model': 'data.hesc.zp_removal_technique'}) }}
                                             </p>
                                         </div>
                                     </div>
@@ -334,7 +334,7 @@
                                     <div class="field-body">
                                         <div class="field">
                                             <p class="control is-expanded">
-                                                {{ form.cell_isolation(class="input") }}
+                                                {{ form.cell_isolation(class="input", **{'v-model': 'data.hesc.cell_isolation'}) }}
                                             </p>
                                         </div>
                                     </div>
@@ -348,7 +348,7 @@
                                     <div class="field-body">
                                         <div class="field">
                                             <p class="control is-expanded">
-                                                {{ form.cell_seeding(class="input") }}
+                                                {{ form.cell_seeding(class="input", **{'v-model': 'data.hesc.cell_seeding'}) }}
                                             </p>
                                         </div>
                                     </div>
@@ -371,7 +371,7 @@
                                     <div class="field-body">
                                         <div class="field">
                                             <p class="control is-expanded">
-                                                {{ form.source_cell_type(class="input") }}
+                                                {{ form.source_cell_type(class="input", **{'v-model': 'data.hipsc.source_cell_type'}) }}
                                             </p>
                                         </div>
                                     </div>
@@ -385,7 +385,7 @@
                                     <div class="field-body">
                                         <div class="field">
                                             <p class="control is-expanded">
-                                                {{ form.source_cell_origin(class="input") }}
+                                                {{ form.source_cell_origin(class="input", **{'v-model': "data.hipsc.source_cell_origin"}) }}
                                             </p>
                                         </div>
                                     </div>
@@ -399,7 +399,7 @@
                                     <div class="field-body">
                                         <div class="field">
                                             <p class="control is-expanded">
-                                                {{ form.donor_age_collection(class="input", type="number") }}
+                                                {{ form.donor_age_collection(class="input", type="number", **{'v-model': 'data.hipsc.age_of_collection'}) }}
                                             </p>
                                         </div>
                                     </div>
@@ -413,7 +413,7 @@
                                     <div class="field-body">
                                         <div class="field">
                                             <p class="control is-expanded">
-                                                {{ form.collected_in(class="input", type="number") }}
+                                                {{ form.collected_in(class="input", type="number", **{'v-model': 'data.hipsc.collected_in'}) }}
                                             </p>
                                         </div>
                                     </div>
@@ -435,7 +435,7 @@
                                         <div class="field">
                                             <p class="control is-expanded">
                                             <div class="select">
-                                                {{ form.vector_type(class="input") }}
+                                                {{ form.vector_type(**{'v-model': 'data.hipsc.vector_type'}) }}
                                             </div>
                                             </p>
                                         </div>
@@ -450,7 +450,7 @@
                                     <div class="field-body">
                                         <div class="field">
                                             <p class="control is-expanded">
-                                                {{ form.vector(class="input") }}
+                                                {{ form.vector(class="input", **{'v-model': 'data.hipsc.vector'}) }}
                                             </p>
                                         </div>
                                     </div>
@@ -471,7 +471,7 @@
                                     <div class="field-body">
                                         <div class="field">
                                             <p class="control is-expanded">
-                                                {{ form.selection_criteria(class="input") }}
+                                                {{ form.selection_criteria(class="input", **{'v-model': 'data.hipsc.selection_criteria'}) }}
                                             </p>
                                         </div>
                                     </div>
@@ -486,7 +486,7 @@
                                         <div class="field">
                                             <p class="control is-expanded">
                                             <div class="select">
-                                                {{ form.xeno_free(class="input") }}
+                                                {{ form.xeno_free(**{'v-model': 'data.hipsc.derived_condition.xeno_free'}) }}
                                             </div>
                                             </p>
                                         </div>
@@ -502,7 +502,7 @@
                                         <div class="field">
                                             <p class="control is-expanded">
                                             <div class="select">
-                                                {{ form.under_gmp(class="input") }}
+                                                {{ form.under_gmp(**{'v-model': 'data.hipsc.derived_condition.under_gmp'}) }}
                                             </div>
                                             </p>
                                         </div>
@@ -518,7 +518,7 @@
                                         <div class="field">
                                             <p class="control is-expanded">
                                             <div class="select">
-                                                {{ form.clinical_grade_avail(class="input") }}
+                                                {{ form.clinical_grade_avail(**{'v-model': 'data.hipsc.clinical_grade_available'}) }}
                                             </div>
                                             </p>
                                         </div>
@@ -539,7 +539,7 @@
                                     <div class="field-body">
                                         <div class="field">
                                             <p class="control is-expanded">
-                                                {{ form.culture_surface_coating(class="input") }}
+                                                {{ form.culture_surface_coating(class="input", **{'v-model': 'data.culture.surface_coating'}) }}
                                             </p>
                                         </div>
                                     </div>
@@ -569,7 +569,7 @@
                                     <div class="field-body">
                                         <div class="field">
                                             <p class="control is-expanded">
-                                                {{ form.culture_passage_method(class="input") }}
+                                                {{ form.culture_passage_method(class="input", **{'v-model': 'data.culture.feeder_cells'}) }}
                                             </p>
                                         </div>
                                     </div>
@@ -583,7 +583,7 @@
                                     <div class="field-body">
                                         <div class="field has-addons">
                                             <p class="control is-expanded">
-                                                {{ form.culture_o2_conc(class="input", type="number") }}
+                                                {{ form.culture_o2_conc(class="input", type="number", **{'v-model': 'data.culture.o2_conc'}) }}
                                             </p>
                                             <p class="control">
                                                 <a class="button is-static">%</a>
@@ -600,7 +600,7 @@
                                     <div class="field-body">
                                         <div class="field has-addons">
                                             <p class="control is-expanded">
-                                                {{ form.culture_co2_conc(class="input", type="number") }}
+                                                {{ form.culture_co2_conc(class="input", type="number", **{'v-model': 'data.culture.co2_conc'}) }}
                                             </p>
                                             <p class="control">
                                                 <a class="button is-static">%</a>
@@ -617,7 +617,7 @@
                                     <div class="field-body">
                                         <div class="field">
                                             <p class="control is-expanded">
-                                                {{ form.culture_medium(class="input") }}
+                                                {{ form.culture_medium(class="input", **{'v-model': 'data.culture.medium'}) }}
                                             </p>
                                         </div>
                                     </div>
@@ -632,7 +632,7 @@
                                         <div class="field">
                                             <p class="control is-expanded">
                                             <div class="select">
-                                                {{ form.culture_rock_inhibitor_used_at_passage(class="input") }}
+                                                {{ form.culture_rock_inhibitor_used_at_passage(class="input", **{'v-model': 'data.culture.rock_inhibitor_passage'}) }}
                                             </div>
                                             </p>
                                         </div>
@@ -648,7 +648,7 @@
                                         <div class="field">
                                             <p class="control is-expanded">
                                             <div class="select">
-                                                {{ form.culture_rock_inhibitor_used_at_cryo(class="input") }}
+                                                {{ form.culture_rock_inhibitor_used_at_cryo(class="input", **{'v-model': 'data.culture.rock_inhibitor_cryo'}) }}
                                             </div>
                                             </p>
                                         </div>
@@ -664,7 +664,7 @@
                                         <div class="field">
                                             <p class="control is-expanded">
                                             <div class="select">
-                                                {{ form.culture_rock_inhibitor_used_at_thaw(class="input") }}
+                                                {{ form.culture_rock_inhibitor_used_at_thaw(class="input", **{'v-model': 'data.culture.rock_inhibitor_thaw'}) }}
                                             </div>
                                             </p>
                                         </div>
@@ -684,7 +684,7 @@
                                         <label class="label"></label>
                                     </div>
                                     <div class="field-body">
-                                        <table class="table" v-if="markerList.length > 0">
+                                        <table class="table" v-if="data.characterization.markers.length > 0">
                                             <thead>
                                             <th>Name</th>
                                             <th>Expressed</th>
@@ -696,7 +696,7 @@
                                             <th></th>
                                             </thead>
                                             <tbody>
-                                            <tr v-for="mk in markerList">
+                                            <tr v-for="mk in data.characterization.markers">
                                                 <td><input class="input" type="text" v-model="mk.name"></td>
                                                 <td>
                                                     <div class="field">
@@ -849,8 +849,6 @@
                                                 <input type="text" class="input" v-model="markerProfiles">
                                             </p>
                                         </div>
-                                        <input type="hidden" name="markerData" v-model="jsonMarkerData">
-                                        <input type="hidden" name="altNames" v-model="jsonAltNames">
                                     </div>
                                 </div>
                             </div>
@@ -869,7 +867,7 @@
                                     <div class="field-body">
                                         <div class="field">
                                             <p class="control is-expanded">
-                                                {{ form.diff_potency_endoderm(class="input") }}
+                                                {{ form.diff_potency_endoderm(class="input", **{'v-model': 'data.characterization.endoderm_potency'}) }}
                                             </p>
                                         </div>
                                     </div>
@@ -883,7 +881,7 @@
                                     <div class="field-body">
                                         <div class="field">
                                             <p class="control is-expanded">
-                                                {{ form.diff_potency_mesoderm(class="input") }}
+                                                {{ form.diff_potency_mesoderm(class="input", **{'v-model': 'data.characterization.mesoderm_potency'}) }}
                                             </p>
                                         </div>
                                     </div>
@@ -897,7 +895,7 @@
                                     <div class="field-body">
                                         <div class="field">
                                             <p class="control is-expanded">
-                                                {{ form.diff_potency_ectoderm(class="input") }}
+                                                {{ form.diff_potency_ectoderm(class="input", **{'v-model': 'data.characterization.ectoderm_potency'}) }}
                                             </p>
                                         </div>
                                     </div>
@@ -921,7 +919,7 @@
                                         <div class="field">
                                             <p class="control is-expanded">
                                             <div class="select">
-                                                {{ form.karyotyped() }}
+                                                {{ form.karyotyped(**{'v-model': 'data.genotyping.karyotyped'}) }}
                                             </div>
                                             </p>
                                         </div>
@@ -936,7 +934,7 @@
                                     <div class="field-body">
                                         <div class="field">
                                             <p class="control is-expanded">
-                                                {{ form.karyotype(class="input") }}
+                                                {{ form.karyotype(class="input", **{'v-model': 'data.genotyping.karyotype'}) }}
                                             </p>
                                         </div>
                                     </div>
@@ -945,6 +943,7 @@
                         </div>
                     </div>
                 </div>
+                <input type="hidden" name="hidden_data" v-model="jsonData">
                 <div class="columns">
                     <div class="column has-text-centered">
                         {{ form.submit(class="button is-rounded is-link") }}
@@ -957,12 +956,12 @@
 {% block scripts %}
     {{ super() }}
     <script>
-        var vueApp = new Vue({
+        var vm = new Vue({
             el: '#app',
             delimiters: ['<%', '%>'],
             data() {
                 return {
-                    cellType: undefined,
+                    cellType: {{ cell.cell_type|tojson|safe }},
                     markerName: '',
                     markerExpression: "no",
                     markerImmunostaining: "no",
@@ -970,24 +969,19 @@
                     markerFACTS: "no",
                     markerEnzyme: "",
                     markerProfiles: "",
-                    altNames: [],
-                    markerList: [],
+                    data: {{ cell.data|tojson|safe }},
                 }
             },
             computed: {
-                jsonMarkerData: function () {
+                jsonData: function () {
                     var self = this;
-                    return JSON.stringify(self.markerList);
-                },
-                jsonAltNames: function () {
-                    var self = this;
-                    return JSON.stringify(self.altNames);
+                    return JSON.stringify(self.data);
                 }
             },
             methods: {
                 addMarker: function (event) {
                     var self = this;
-                    self.markerList.push({
+                    self.data.characterization.markers.push({
                         name: self.markerName,
                         expressed: self.markerExpression,
                         immunostaining: self.markerImmunostaining,
@@ -1006,9 +1000,9 @@
                     event.preventDefault();
                 },
                 deleteMarker: function (marker, event) {
-                    for (let i=0; i < this.markerList.length; i++) {
-                        if (this.markerList[i].name === marker.name) {
-                            this.markerList.splice(i,1);
+                    for (let i=0; i < this.data.characterization.markers.length; i++) {
+                        if (this.data.characterization.markers[i].name === marker.name) {
+                            this.data.characterization.markers.splice(i,1);
                         }
                     }
                 },
