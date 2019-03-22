@@ -20,7 +20,7 @@
                         {% if status_filter %}
                             <div class="tags has-addons">
                                 <span class="tag">Filter</span>
-                                <span class="tag is-primary">{{ status_filter }}</span>
+                                <span class="tag {% if status_filter=='approved' %}is-success{% else %}is-warning{% endif %}">{{ status_filter }}</span>
                             </div>
                         {% endif %}
                         <b-table

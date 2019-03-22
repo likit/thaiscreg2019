@@ -13,10 +13,22 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td>Registered Cell Lines</td>
-                                <td>0</td>
-                                <td>0</td>
-                                <td>0</td>
+                                <td>Your Cell Lines</td>
+                                <td>
+                                    <a href="{{ url_for('main.account_cells', status_filter='all') }}">
+                                        {{ cells['total'] }}
+                                    </a>
+                                </td>
+                                <td>
+                                    <a href="{{ url_for('main.account_cells', status_filter='pending') }}">
+                                        {{ cells['pending'] }}
+                                    </a>
+                                </td>
+                                <td>
+                                    <a href="{{ url_for('main.account_cells', status_filter='approved') }}">
+                                        {{ cells['approved'] }}
+                                    </a>
+                                </td>
                             </tr>
                             <tr>
                                 <td>Your Projects</td>
@@ -44,9 +56,15 @@
                             </tr>
                             <tr>
                                 <td>Cell Lines from Your Affiliation</td>
-                                <td>0</td>
-                                <td>0</td>
-                                <td>0</td>
+                                <td>
+                                    {{ affil_cells['total'] }}
+                                </td>
+                                <td>
+                                    {{ affil_cells['pending'] }}
+                                </td>
+                                <td>
+                                    {{ affil_cells['approved'] }}
+                                </td>
                             </tr>
                             <tr>
                                 <td>Projects from Your Affiliation</td>
