@@ -35,6 +35,11 @@ class ProfileForm(FlaskForm):
     street = StringField('Street', widget=TextArea())
     submit = SubmitField('Submit')
 
+cell_availability = [
+    ('0', 'Available with no restrictions'),
+    ('1', 'Available for non-commercial research only'),
+    ('2', 'Currently not available')
+]
 
 class RegisterCellForm(FlaskForm):
     cell_type = RadioField('Cell Type',
@@ -45,11 +50,7 @@ class RegisterCellForm(FlaskForm):
                               validators=[DataRequired(), ])
     comment = StringField('Comment', widget=TextArea())
     alternative_names = StringField('Alternative Name(s)')
-    available = SelectField('Availability', choices=[
-        ('0', 'Available with no restrictions'),
-        ('1', 'Available for non-commercial research only'),
-        ('2', 'Currently not available')
-    ])
+    available = SelectField('Availability', choices=cell_availability)
     karyotyped = SelectField('Has the cell line been karyotyped?',
                              choices=[('no', 'No'), ('yes', 'Yes')],
                              default='no')
