@@ -30,22 +30,25 @@
             <div class="column">
                 <h3 class="title is-size-4">Cell Lines</h3>
                 <p>
-                    <a href="#">Register Cell Line</a>
+                    <a href="{{ url_for('main.register_cell') }}">Register Cell Line</a>
                 </p>
                 <p>
-                    <a href="#">All hESC cells</a>
+                    <a href="{{ url_for('main.show_cell_list', cell_type='hESC') }}">All hESC cells</a>
                 </p>
                 <p>
-                    <a href="#">All hiPSC cells</a>
+                    <a href="{{ url_for('main.show_cell_list', cell_type='hiPSC') }}">All hiPSC cells</a>
+                </p>
+                <p>
+                    <a href="{{ url_for('main.show_cell_list', cell_type='MSC') }}">All MSC cells</a>
                 </p>
             </div>
             <div class="column">
                 <h3 class="title is-size-4">Projects</h3>
                 <p>
-                    <a href="#">Register Project</a>
+                    <a href="{{ url_for('main.register_project') }}">Register Project</a>
                 </p>
                 <p>
-                    <a href="#">All Projects</a>
+                    <a href="{{ url_for('main.show_projects') }}">All Projects</a>
                 </p>
             </div>
             <div class="column">
