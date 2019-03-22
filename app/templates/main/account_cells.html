@@ -1,87 +1,87 @@
 {% extends "main/account_base.html" %}
 {% block account_content %}
     <div class="container" id="app">
-    <div class="box">
-        <div class="columns">
-            <div class="column">
-                <div class="has-text-right">
-                    <a class="button is-success is-rounded"
-                       href="{{ url_for('main.register_cell') }}"
-                    >
+        <div class="box">
+            <div class="columns">
+                <div class="column">
+                    <div class="has-text-right">
+                        <a class="button is-success is-rounded"
+                           href="{{ url_for('main.register_cell') }}"
+                        >
                         <span class="icon">
                             <i class="fas fa-plus"></i>
                         </span>&nbsp;
-                        Register Cell
-                    </a>
+                            Register Cell
+                        </a>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="columns">
-            <div class="column">
-                <h1>Total cell lines is {{ cells|length }}</h1>
-                <b-table
-                        :data="data"
-                        ref="table"
-                        paginated
-                        per-page="5"
-                        detailed
-                        detail-key="id"
-                >
-                    <template slot-scope="props">
-                        <b-table-column field="id" label="Cell Line ID" numeric>
-                            <% props.row.id %>
-                        </b-table-column>
-                        <b-table-column field="cell_type" label="Cell Type" width="50" sortable>
-                            <a @click="toggle(props.row)">
-                                <% props.row.cell_type %>
-                            </a>
-                        </b-table-column>
-                        <b-table-column field="alt_names" label="Alternative Names" width="200" sortable>
-                            <a @click="toggle(props.row)">
-                                <% props.row.alt_names %>
-                            </a>
-                        </b-table-column>
-                        <b-table-column field="generator" label="Generator Institution" width="300" sortable>
-                            <% props.row.institution_name %> (<% props.row.institution_campus %>)
-                        </b-table-column>
-                        <b-table-column field="submit_datetime" label="Submitted Date" sortable>
-                            <% props.row.register_datetime %>
-                        </b-table-column>
-                        <b-table-column field="update_datetime" label="Last Update" sortable>
-                            <% props.row.update_datetime %>
-                        </b-table-column>
-                        <b-table-column field="status" label="Status" sortable>
-                            <% props.row.status %>
-                        </b-table-column>
-                        <b-table-column field="view" label="View">
-                            <a v-bind:href="'/cell/'+props.row.id">
+            <div class="columns">
+                <div class="column">
+                    <h1>Total cell lines is {{ cells|length }}</h1>
+                    <b-table
+                            :data="data"
+                            ref="table"
+                            paginated
+                            per-page="5"
+                            detailed
+                            detail-key="id"
+                    >
+                        <template slot-scope="props">
+                            <b-table-column field="id" label="Cell Line ID" numeric>
+                                <% props.row.id %>
+                            </b-table-column>
+                            <b-table-column field="cell_type" label="Cell Type" width="50" sortable>
+                                <a @click="toggle(props.row)">
+                                    <% props.row.cell_type %>
+                                </a>
+                            </b-table-column>
+                            <b-table-column field="alt_names" label="Alternative Names" width="200" sortable>
+                            <span class="tag is-info is-rounded" v-for="name in props.row.alt_names">
+                                <% name %>
+                            </span>
+                            </b-table-column>
+                            <b-table-column field="generator" label="Generator Institution" width="300" sortable>
+                                <% props.row.institution_name %> (<% props.row.institution_campus %>)
+                            </b-table-column>
+                            <b-table-column field="submit_datetime" label="Submitted Date" sortable>
+                                <% props.row.register_datetime %>
+                            </b-table-column>
+                            <b-table-column field="update_datetime" label="Last Update" sortable>
+                                <% props.row.update_datetime %>
+                            </b-table-column>
+                            <b-table-column field="status" label="Status" sortable>
+                                <% props.row.status %>
+                            </b-table-column>
+                            <b-table-column field="view" label="View">
+                                <a v-bind:href="'/cell/'+props.row.id">
                                         <span class="icon">
                                             <i class="far fa-eye"></i>
                                         </span>
-                                <span class="tag"><% props.row.view_count %></span>
-                            </a>
-                        </b-table-column>
-                        <b-table-column field="edit" label="Edit">
-                            <a v-bind:href="'/cell/edit/'+props.row.id">
+                                    <span class="tag"><% props.row.view_count %></span>
+                                </a>
+                            </b-table-column>
+                            <b-table-column field="edit" label="Edit">
+                                <a v-bind:href="'/cell/edit/'+props.row.id">
                                         <span class="icon">
                                             <i class="far fa-pencil-alt"></i>
                                         </span>
-                            </a>
-                        </b-table-column>
-                    </template>
-                    <template slot="detail" slot-scope="props">
-                        <article class="media">
-                            <div class="media-content">
-                                <div class="content">
-                                    <p>
-                                        <strong>Submitted by <% props.row.submitted_by %></strong>
-                                        <small>
+                                </a>
+                            </b-table-column>
+                        </template>
+                        <template slot="detail" slot-scope="props">
+                            <article class="media">
+                                <div class="media-content">
+                                    <div class="content">
+                                        <p>
+                                            <strong>Submitted by <% props.row.submitted_by %></strong>
+                                            <small>
                                                 <span class="icon">
                                                     <i class="fas fa-envelope"></i>
                                                 </span>&nbsp;<% props.row.submitter_email %>
-                                        </small>
-                                    </p>
-                                    <p>
+                                            </small>
+                                        </p>
+                                        <p>
                                         <div class="field is-grouped is-grouped-multiline">
                                             <div class="control">
                                                 <div class="tags has-addons">
@@ -90,13 +90,6 @@
                                                         <% props.row.status %>
                                                     </span>
                                                 </div>
-                                            </div>
-                                            <div class="control">
-                                                <small>
-                                                    <a class="has-text-link"
-                                                       v-bind:href="'/cell/' + props.row.id"
-                                                    >View detail..</a>
-                                                </small>
                                             </div>
                                         </div>
                                         <span class="icon">
@@ -111,15 +104,24 @@
                                         <small>
                                             <% props.row.last_view %>
                                         </small>
-                                    </p>
+                                        <small>
+                                            <a class="button is-rounded is-light is-small"
+                                               v-bind:href="'/cell/' + props.row.id">
+                                                <span>see detail</span>
+                                                <span class="icon">
+                                                    <i class="fas fa-chevron-right"></i>
+                                                </span>
+                                            </a>
+                                        </small>
+                                        </p>
+                                    </div>
                                 </div>
-                            </div>
-                        </article>
-                    </template>
-                </b-table>
+                            </article>
+                        </template>
+                    </b-table>
+                </div>
             </div>
         </div>
-    </div>
     </div>
 {% endblock %}
 {% block scripts %}
