@@ -574,3 +574,8 @@ def show_cell_list():
                            page_name='cell',
                            query=query,
                            cells=query_filtered_cells)
+
+
+@main.route('/about')
+def about():
+    return render_template('main/about.html')

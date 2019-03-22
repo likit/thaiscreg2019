@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Thai SCReg Main Page{% endblock %}
+
 {% block content %}
     <section class="hero is-info is-bold is-small">
         <div class="hero-head">
@@ -18,20 +18,22 @@
                             <a class="navbar-item" href="/">
                                 Home
                             </a>
-                            <a class="navbar-item" href="{{ url_for('main.show_cell_list') }}">
+                            <a class="navbar-item"
+                               href="{{ url_for('main.show_cell_list') }}">
                                 Cells
                             </a>
-                            <a class="navbar-item" href="{{ url_for('main.show_projects') }}">
+                            <a class="navbar-item"
+                               href="{{ url_for('main.show_projects') }}">
                                 Projects
                             </a>
                             <a class="navbar-item">
                                 Researchers
                             </a>
-                            <a class="navbar-item" href="{{ url_for('main.about') }}">
+                            <a class="navbar-item is-active">
                                 About
                             </a>
                             {% if current_user.is_authenticated %}
-                                <div class="navbar-item" >
+                                <div class="navbar-item">
                                     <div class="buttons">
                                         <a class="button is-rounded is-light"
                                            href="{{ url_for('main.account_dash') }}">
@@ -62,36 +64,43 @@
             </nav>
         </div>
         <div class="hero-body">
-            <div class="container">
-                <p><h1 class="title">{{ current_user.profile.academic_title_th or '' }} {{ current_user.profile.first_name_th or '' }} {{ current_user.profile.last_name_th or '' }}</h1>
-                <h1 class="subtitle">{{ current_user.profile.first_name_en or '' }} {{ current_user.profile.last_name_en or ''}}</h1></p>
-                <p><h1 class="subtitle">สังกัด {{ current_user.profile.affil.name_th or '-' }} วิทยาเขต {{ current_user.profile.affil.campus or '-'}}</h1></p>
-            </div>
-        </div>
-        <div class="hero-foot">
-            <nav class="tabs is-boxed is-fullwidth">
-                <div class="container">
-                    <ul>
-                        <li {% if page_name=='dashboard' %}class="is-active"{% endif %}>
-                            <a href="{{ url_for('main.account_dash') }}">Overview</a>
-                        </li>
-                        <li {% if page_name=='profile' %}class="is-active"{% endif %}>
-                            <a href="{{ url_for('main.edit_profile') }}">Profile</a>
-                        </li>
-                        <li {% if page_name=='cell' %}class="is-active"{% endif %}>
-                            <a href="{{ url_for('main.account_cells') }}">Cells</a>
-                        </li>
-                        <li {% if page_name=='project' %}class="is-active"{% endif %}>
-                            <a href="{{ url_for('main.account_projects') }}">Project</a>
-                        </li>
-                    </ul>
+            <div class="container has-text-centered">
+                <div class="columns">
+                    <div class="column">
+                        <h1 class="title">About ThSCReg</h1>
+                    </div>
                 </div>
-            </nav>
+            </div>
         </div>
     </section>
     <section class="section">
-        {% block account_content %}
-        {% endblock %}
+        <div class="container">
+            <div class="columns">
+                <div class="column">
+                    <div class="notification">
+                        <h1 class="title">Thailand Stem Cell Registry</h1>
+                        <br>
+                        <h1 class="subtitle"><strong>About the project</strong></h1>
+                        <p>
+                            ThSCReg is a freely accessible registry for Thailand-derived human pluripotent stem cell lines (hPSC lines), which developed to offer the research community, legislators, regulators, and the general public the primary source of information about cell lines and relevant research projects in Thailand. The project has been funded and supported by TCELS.
+                        </p>
+                        <br>
+                        <h2 class="subtitle"><strong>Funding and support</strong></h2>
+                        <p>
+                            The project has been funded and supported by TCELS.
+                        </p>
+                        <br>
+                        <h2 class="subtitle"><strong>Team</strong></h2>
+                        <ul>
+                            <li>Dr. Ruttachak Rungsiwitat, Srinakharinwirot University : Curator</li>
+                            <li>Asst. Prof. Dr. Narisorn Kitiyanant, Mahidol University : Curator</li>
+                            <li>Dr. Likit Preeyanon, Mahidol University : System Administrator</li>
+                        </ul>
+                        <br>
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
 {% endblock %}
 {% block scripts %}
