@@ -149,20 +149,25 @@
                         <div class="field is-grouped is-grouped-multiline is-grouped-centered">
                         {% for cell in cells %}
                                 <div class="control">
+                                    {% if cell.status.status == 'approved' %}
                                     <a href="{{ url_for('main.display_cell_info', cell_id=cell.id) }}">
                                         <div class="tags has-addons">
                                             <span class="tag is-dark">{{ cell.cell_type }}</span>
                                             <span class="tag
-                                                {% if cell.status.status == 'approved' %}
                                                 is-success
-                                                {% else %}
-                                                is-warning
-                                                {% endif %}
                                                 ">
                                                 <strong>THSCR-{{ cell.id }}</strong>
                                             </span>
                                         </div>
                                     </a>
+                                    {% else %}
+                                        <div class="tags has-addons">
+                                            <span class="tag is-dark">{{ cell.cell_type }}</span>
+                                            <span class="tag is-warning">
+                                                <strong>THSCR-{{ cell.id }}</strong>
+                                            </span>
+                                        </div>
+                                    {% endif %}
                                 </div>
                         {% endfor %}
                         </div>
@@ -170,11 +175,12 @@
                 </div>
                 <div class="columns">
                     <div class="column">
-                        <form>
+                        <form action="{{ url_for('main.show_cell_list') }}" method="get">
                             <div class="field">
                                 <div class="control has-icons-left">
                                     <input type="text"
                                            class="input is-large is-rounded is-focused"
+                                           name="query"
                                            placeholder="Search Cell Line">
                                     <span class="icon is-left">
                                         <i class="fas fa-search"></i>
@@ -202,15 +208,10 @@
                             </span>&nbsp;What is ThSCReg</h3>
                             <p>
                                 <small>
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                                    incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-                                    exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute
-                                    irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-                                    pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia
-                                    deserunt mollit anim id est laborum
+                                    <strong>ThSCReg</strong> is a freely accessible registry for Thailand-derived human pluripotent stem cell lines (hPSC lines), which developed to offer the research community, legislators, regulators, and the general public the primary source of information about cell lines and relevant research projects in Thailand. The project has been funded and supported by TCELS.
                                 </small>
                             </p>
-                            <button class="button is-light is-rounded">More</button>
+                            <button class="button is-dark is-rounded is-small">More</button>
                         </div>
                     </div>
                 </div>
@@ -270,11 +271,15 @@
                                 <p class="content">
                                     <small>{{ proj.summary|truncate(200, True) }}</small>
                                     <a class="button is-small is-light is-rounded">
-                                        <small>More</small>
+                                        <span>More</span>
+                                        <span class="icon">
+                                            <i class="fa fa-chevron-right"></i>
+                                        </span>
                                     </a>
                                     <br>
                                     <div class="field is-grouped is-grouped-multiline">
                                         <div class="control">
+                                            {% if proj.cell.id %}
                                             <a href="{{ url_for('main.display_cell_info', cell_id=proj.cell.id) }}">
                                                 <div class="tags has-addons">
                                                     <span class="tag is-dark">{{ proj.cell.cell_type }}</span>
@@ -283,6 +288,7 @@
                                                     </span>
                                                 </div>
                                             </a>
+                                            {% endif %}
                                         </div>
                                     </div>
                                 </p>
