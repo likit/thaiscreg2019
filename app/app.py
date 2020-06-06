@@ -1,5 +1,4 @@
 import os
-import uuid
 from flask import Flask
 from flask_login import LoginManager
 from flask_migrate import Migrate
@@ -7,6 +6,9 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
 from flask_marshmallow import Marshmallow
+from dotenv import load_dotenv
+
+load_dotenv()
 
 db = SQLAlchemy()
 login_manager = LoginManager()
@@ -14,13 +16,12 @@ migrate = Migrate()
 admin = Admin()
 ma = Marshmallow()
 
-POSTGRES_PASSWORD = os.environ.get('POSTGRES_PASSWORD')
+DATABASE_URL = os.environ.get('DATABASE_URL')
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY') or str(uuid.uuid4())
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres+psycopg2://postgres:{}@pg/scregdb' \
-    .format(POSTGRES_PASSWORD)
+app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
 app.config['SQLALCHEMY_BINDS'] = {}
 
 db.init_app(app)
