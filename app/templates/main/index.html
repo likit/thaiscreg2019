@@ -13,8 +13,9 @@
                         <h1 class="subtitle is-size-4">For The Advancement of Stem Cell Research & Innovation in Thailand</h1>
                         {% if current_user.is_authenticated %}
                             <img src="{{ url_for('static', filename='img/logo.png') }}" width="400">
-                            <h1 class="title is-size-6">Funded by Thailand Center of Excellence for Life Science (TCELS)</h1>
                         {% endif %}
+                        <br>
+                        <h1 class="title is-size-6">Funded by Thailand Center of Excellence for Life Science (TCELS)</h1>
                         <br>
                         <div class="has-text-centered">
                             <a class="button is-link is-rounded is-large"
@@ -37,7 +38,7 @@
                         <div class="column is-one-third">
                         <div class="card">
                             <div class="card-content has-text-centered">
-                                <img src="{{ url_for('static', filename='img/logo.png') }}" width="200">
+                                <img src="{{ url_for('static', filename='img/logo-no-text.png') }}" width="200">
                             </div>
                         </div>
                         <div class="card">
