@@ -9,15 +9,13 @@
             <div class="container">
                 <div class="columns">
                     <div class="column has-text-centered">
-                        <br>
                         <h1 class="title">Thailand Stem Cell Registry (ThSCReg)</h1>
                         <h1 class="subtitle is-size-4">For The Advancement of Stem Cell Research & Innovation in Thailand</h1>
                         {% if current_user.is_authenticated %}
-                            <img src="{{ url_for('static', filename='img/logo.png') }}" width="300">
-                            <br>
+                            <img src="{{ url_for('static', filename='img/logo.png') }}" width="400">
+                            <h1 class="title is-size-6">Funded by Thailand Center of Excellence for Life Science (TCELS)</h1>
                         {% endif %}
                         <br>
-                        <h1 class="title is-size-5">Funded by Thailand Center of Excellence for Life Science (TCELS)</h1>
                         <div class="has-text-centered">
                             <a class="button is-link is-rounded is-large"
                                href="{{ url_for('main.register_project') }}">
