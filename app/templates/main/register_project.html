@@ -3,51 +3,7 @@
 {% block content %}
     <section class="hero is-info is-bold is-small">
         <div class="hero-head">
-            <nav class="navbar">
-                <div class="container">
-                    <div class="navbar-brand">
-                        <a role="button" class="navbar-burger burger" aria-label="menu"
-                           aria-expanded="false" data-target="navbarBasicExample">
-                            <span aria-hidden="true"></span>
-                            <span aria-hidden="true"></span>
-                            <span aria-hidden="true"></span>
-                        </a>
-                    </div>
-                    <div id="navbarBasicExample" class="navbar-menu">
-                        <div class="navbar-end">
-                            <a class="navbar-item" href="/">
-                                Home
-                            </a>
-                            {% if current_user.is_authenticated %}
-                                <div class="navbar-item">
-                                    <div class="buttons">
-                                        <a class="button is-rounded is-light"
-                                           href="{{ url_for('main.account_dash') }}">
-                                            <span class="icon">
-                                                <i class="fas fa-user-circle"></i>
-                                            </span>&nbsp;
-                                            Account
-                                        </a>
-                                        <a class="button is-light is-rounded"
-                                           href="{{ url_for('main.log_user_out') }}">
-                                            <span class="icon">
-                                               <i class="fas fa-power-off"></i>
-                                            </span>
-                                        </a>
-                                    </div>
-                                </div>
-                            {% else %}
-                                <div class="navbar-item">
-                                    <a class="button is-link is-rounded"
-                                       href="{{ url_for('main.log_user_in') }}">
-                                        Log In
-                                    </a>
-                                </div>
-                            {% endif %}
-                        </div>
-                    </div>
-                </div>
-            </nav>
+            {% include "main/navbar.html" %}
         </div>
         <div class="hero-body">
             <div class="container has-text-centered">

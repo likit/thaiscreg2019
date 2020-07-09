@@ -3,75 +3,20 @@
 {% block content %}
     <section class="hero is-info is-bold is-medium">
         <div class="hero-head">
-            <nav class="navbar">
-                <div class="container">
-                    <div class="navbar-brand">
-                        <a role="button" class="navbar-burger burger" aria-label="menu"
-                           aria-expanded="false" data-target="navbarBasicExample">
-                            <span aria-hidden="true"></span>
-                            <span aria-hidden="true"></span>
-                            <span aria-hidden="true"></span>
-                        </a>
-                    </div>
-                    <div id="navbarBasicExample" class="navbar-menu">
-                        <div class="navbar-end">
-                            <a class="navbar-item is-active">
-                                Home
-                            </a>
-                            <a class="navbar-item" href="{{ url_for('main.show_cell_list') }}">
-                                Cells
-                            </a>
-                            <a class="navbar-item" href="{{ url_for('main.show_projects') }}">
-                                Projects
-                            </a>
-                            <a class="navbar-item" href="{{ url_for('main.about') }}">
-                                About
-                            </a>
-                            {% if current_user.is_authenticated %}
-                                <div class="navbar-item" >
-                                    <div class="buttons">
-                                        <a class="button is-rounded is-light"
-                                           href="{{ url_for('main.account_dash') }}">
-                                            <span class="icon">
-                                                <i class="fas fa-user-circle"></i>
-                                            </span>&nbsp;
-                                                Account
-                                        </a>
-                                        <a class="button is-light is-rounded"
-                                           href="{{ url_for('main.log_user_out') }}">
-                                            <span class="icon">
-                                               <i class="fas fa-power-off"></i>
-                                            </span>
-                                        </a>
-                                    </div>
-                                </div>
-                            {% else %}
-                                <div class="navbar-item">
-                                    <a class="button is-link is-rounded"
-                                       href="{{ url_for('main.log_user_in') }}">
-                                        Log In
-                                    </a>
-                                </div>
-                            {% endif %}
-                        </div>
-                    </div>
-                </div>
-            </nav>
+            {% include "main/navbar.html" %}
         </div>
         <div class="hero-body">
             <div class="container">
                 <div class="columns">
-                    <div class="column">
+                    <div class="column has-text-centered">
                         <br>
                         <h1 class="title">Thailand Stem Cell Registry (ThSCReg)</h1>
-                        <h1 class="subtitle is-size-4">
-                            <!--
-                            <span class="icon">
-                                <i class="fas fa-rocket"></i>
-                            </span>
-                            -->
-                            For The Advancement of Stem Cell Research & Innovation in Thailand</h1>
-                        <br><br>
+                        <h1 class="subtitle is-size-4">For The Advancement of Stem Cell Research & Innovation in Thailand</h1>
+                        {% if current_user.is_authenticated %}
+                            <img src="{{ url_for('static', filename='img/logo.png') }}" width="300">
+                            <br>
+                        {% endif %}
+                        <br>
                         <h1 class="title is-size-5">Funded by Thailand Center of Excellence for Life Science (TCELS)</h1>
                         <div class="has-text-centered">
                             <a class="button is-link is-rounded is-large"
@@ -90,7 +35,13 @@
                             </a>
                         </div>
                     </div>
-                    <div class="column is-one-third">
+                    {% if not current_user.is_authenticated %}
+                        <div class="column is-one-third">
+                        <div class="card">
+                            <div class="card-content has-text-centered">
+                                <img src="{{ url_for('static', filename='img/logo.png') }}" width="200">
+                            </div>
+                        </div>
                         <div class="card">
                             <div class="card-header">
                                 <p class="card-header-title is-centered">
@@ -139,6 +90,7 @@
                             </footer>
                         </div>
                     </div>
+                    {% endif %}
                 </div>
                 <div class="columns">
                     <div class="column has-text-centered">

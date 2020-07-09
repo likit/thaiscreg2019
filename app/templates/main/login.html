@@ -3,6 +3,7 @@
 {% block content %}
     <section class="hero is-info is-fullheight is-bold">
     <div class="hero-head">
+        {% include "main/navbar.html" %}
     </div>
     <div class="hero-body" id="app">
         <div class="container">
@@ -24,18 +25,18 @@
                                 {{ form.hidden_tag() }}
                                 <div class="field">
                                     <div class="control has-icons-left">
-                                        {{ form.email(placeholder='Email Address', class='input') }}
                                         <span class="icon">
                                             <i class="fas fa-envelope"></i>
                                         </span>
+                                        {{ form.email(placeholder='Email Address', class='input') }}
                                     </div>
                                 </div>
                                 <div class="field">
                                     <div class="control has-icons-left">
-                                        {{ form.password(placeholder='Password', class='input') }}
                                         <span class="icon">
                                             <i class="fas fa-lock"></i>
                                         </span>
+                                        {{ form.password(placeholder='Password', class='input') }}
                                     </div>
                                 </div>
                                 <div class="has-text-centered">
